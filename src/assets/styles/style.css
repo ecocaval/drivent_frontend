@@ -2,9 +2,32 @@
 
 * {
   box-sizing: border-box;
-  transition: all ease .2s;
+  transition: all ease 0.2s;
 }
 
 body {
-  font-family: "Lexend Deca", sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
+
+  /* colors */
+
+  --font-gray: #8e8e8e;
+}
+
+input {
+  height: 50px;
+  border-radius: 8px;
+  border: none;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+input:focus {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  outline: none;
+  border: none;
+}
+
+input:invalid {
+  border-color: red;
 }

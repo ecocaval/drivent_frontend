@@ -59,7 +59,7 @@ export default function App() {
 function ProtectedRouteGuard({ children }) {
   const token = useToken();
 
-  if (!token) {
+  if (token) {
     return <Navigate to="/sign-in" />;
   }
 
