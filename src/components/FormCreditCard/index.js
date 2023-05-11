@@ -96,7 +96,7 @@ export default FormCreditCard;
 
 const FormCreditCardStyle = styled.div`
   display: flex;
-  @media (max-width: 768px) {
+  @media (max-width: 910px) {
     display: grid;
     gap: 20px;
   }
@@ -112,7 +112,7 @@ const FormCreditCardStyle = styled.div`
     max-width: 600px;
     input {
       width: 400px;
-      @media (max-width: 768px) {
+      @media (max-width: 910px) {
         width: 100%;
       }
     }

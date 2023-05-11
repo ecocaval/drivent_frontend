@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import FormCreditCard from '../../../components/FormCreditCard';
+import TitleSection from '../../../components/Titles/TitleSection';
 
 export default function Payment() {
   const [formData, setFormData] = useState({
@@ -15,5 +16,10 @@ export default function Payment() {
     console.log(formData);
   };
 
-  return <FormCreditCard formData={formData} setFormData={setFormData} />;
+  return (
+    <>
+      <TitleSection title={'Pagamentos'} />
+      <FormCreditCard formData={formData} setFormData={setFormData} />
+    </>
+  );
 }
