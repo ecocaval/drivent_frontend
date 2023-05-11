@@ -38,16 +38,20 @@ const FormCreditCard = ({ formData, setFormData }) => {
       </div>
 
       <form>
-        <input
-          ref={inputRefs.number}
-          type="tel"
-          name="number"
-          placeholder="Card Number"
-          onChange={onInputChange}
-          onFocus={() => handleInputFocus('number')}
-          maxLength={16}
-          min={0}
-        />
+        <div className="containerNumber">
+          <input
+            ref={inputRefs.number}
+            type="tel"
+            name="number"
+            placeholder="Card Number"
+            onChange={onInputChange}
+            onFocus={() => handleInputFocus('number')}
+            maxLength={16}
+            min={0}
+          />
+
+          <h1>Ex.: 49..., 51..., 36..., 37...</h1>
+        </div>
 
         <input
           ref={inputRefs.name}
@@ -80,6 +84,7 @@ const FormCreditCard = ({ formData, setFormData }) => {
             onFocus={() => handleInputFocus('cvc')}
             maxLength={3}
             min={0}
+            className="cvcInput"
           />
         </div>
       </form>
@@ -91,7 +96,10 @@ export default FormCreditCard;
 
 const FormCreditCardStyle = styled.div`
   display: flex;
-
+  @media (max-width: 768px) {
+    display: grid;
+    gap: 20px;
+  }
   .cardContainer {
     display: grid;
     place-items: center;
@@ -102,10 +110,31 @@ const FormCreditCardStyle = styled.div`
     display: grid;
     gap: 10px;
     max-width: 600px;
+    input {
+      width: 400px;
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+    }
+    h1 {
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.3);
+      font-size: 14px;
+      margin-left: 5px;
+      margin-top: 5px;
+    }
+
     .containerDoble {
       display: flex;
       gap: 10px;
       max-width: 100%;
+      input:nth-child(1) {
+        width: 100%;
+      }
+
+      .cvcInput {
+        max-width: 100px;
+      }
     }
   }
 `;
