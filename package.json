@@ -133,6 +133,7 @@
   "devDependencies": {
     "git-commit-msg-linter": "^3.2.8",
     "husky": "^7.0.2",
-    "lint-staged": "^11.1.2"
+    "lint-staged": "^11.1.2",
+    "react-credit-cards": "^0.8.3"
   }
 }

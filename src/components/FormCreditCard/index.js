@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
 import styled from 'styled-components';
+import TitleSection from '../Titles/TitleSection';
 
 const FormCreditCard = ({ formData, setFormData }) => {
   const { cvc, expiry, name, number } = formData;
@@ -32,63 +33,66 @@ const FormCreditCard = ({ formData, setFormData }) => {
     }));
   };
   return (
-    <FormCreditCardStyle id="PaymentForm">
-      <div className="cardContainer">
-        <Cards cvc={cvc} expiry={expiry} focused={focusedField} name={name} number={number} />
-      </div>
-
-      <form>
-        <div className="containerNumber">
-          <input
-            ref={inputRefs.number}
-            type="tel"
-            name="number"
-            placeholder="Card Number"
-            onChange={onInputChange}
-            onFocus={() => handleInputFocus('number')}
-            maxLength={16}
-            min={0}
-          />
-
-          <h1>Ex.: 49..., 51..., 36..., 37...</h1>
+    <>
+      <TitleSection title={'Pagamento'} />
+      <FormCreditCardStyle id="PaymentForm">
+        <div className="cardContainer">
+          <Cards cvc={cvc} expiry={expiry} focused={focusedField} name={name} number={number} />
         </div>
 
-        <input
-          ref={inputRefs.name}
-          type="text"
-          name="name"
-          placeholder="Name"
-          onChange={onInputChange}
-          onFocus={() => handleInputFocus('name')}
-          maxLength={15}
-          min={0}
-        />
+        <form>
+          <div className="containerNumber">
+            <input
+              ref={inputRefs.number}
+              type="tel"
+              name="number"
+              placeholder="Card Number"
+              onChange={onInputChange}
+              onFocus={() => handleInputFocus('number')}
+              maxLength={16}
+              min={0}
+            />
 
-        <div className="containerDoble">
+            <h1>Ex.: 49..., 51..., 36..., 37...</h1>
+          </div>
+
           <input
-            ref={inputRefs.expiry}
-            type="tel"
-            name="expiry"
-            placeholder="Valid Thru"
+            ref={inputRefs.name}
+            type="text"
+            name="name"
+            placeholder="Name"
             onChange={onInputChange}
-            onFocus={() => handleInputFocus('expiry')}
-            maxLength={4}
+            onFocus={() => handleInputFocus('name')}
+            maxLength={15}
             min={0}
           />
-          <input
-            ref={inputRefs.cvc}
-            type="tel"
-            name="cvc"
-            placeholder="CVC"
-            onChange={onInputChange}
-            onFocus={() => handleInputFocus('cvc')}
-            maxLength={3}
-            min={0}
-            className="cvcInput"
-          />
-        </div>
-      </form>
-    </FormCreditCardStyle>
+
+          <div className="containerDoble">
+            <input
+              ref={inputRefs.expiry}
+              type="tel"
+              name="expiry"
+              placeholder="Valid Thru"
+              onChange={onInputChange}
+              onFocus={() => handleInputFocus('expiry')}
+              maxLength={4}
+              min={0}
+            />
+            <input
+              ref={inputRefs.cvc}
+              type="tel"
+              name="cvc"
+              placeholder="CVC"
+              onChange={onInputChange}
+              onFocus={() => handleInputFocus('cvc')}
+              maxLength={3}
+              min={0}
+              className="cvcInput"
+            />
+          </div>
+        </form>
+      </FormCreditCardStyle>
+    </>
   );
 };
 
