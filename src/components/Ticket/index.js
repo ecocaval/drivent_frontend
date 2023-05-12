@@ -21,8 +21,8 @@ export const Card = styled.div`
   align-items: center;
   width: 145px;
   height: 145px;
-  //  background-color: (selecionado)? while : var(--color-Cardx2);
-  border: 1px solid var(--color-Card);
+  //  background-color: (selecionado)? while : var(--color-cardx2);
+  border: 1px solid var(--color-card);
   border-radius: 20px;
   margin-bottom: 30px;
 `;
@@ -33,8 +33,8 @@ export const Cardx2 = styled.div`
   justify-content: center;
   width: 290px;
   height: 145px;
-  background-color: var(--color-Cardx2);
-  border: 1px solid var(--color-Card);
+  background-color: var(--color-cardx2);
+  border: 1px solid var(--color-card);
   border-radius: 20px;
   margin-bottom: 30px;
 `;
