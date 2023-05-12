@@ -4,6 +4,7 @@ import FormCreditCard from '../../../components/FormCreditCard';
 import TitleSection from '../../../components/Titles/TitleSection';
 import Ticket from '../../../components/Ticket';
 import styled from 'styled-components';
+import { AreaSubTitle, AreaTitle } from '../../../assets/styles/styledDashboard';
 
 export default function Payment() {
   const [ticket, setTicket] = useState({
@@ -46,7 +47,7 @@ export default function Payment() {
 
   return (
     <>
-      <h1 style={{ fontSize: '34px', marginBottom: '37px' }}>Ingresso e pagamento</h1>
+      <AreaTitle>Ingresso e pagamento</AreaTitle>
       <Ticket ticket={ticket} setTicket={setTicket} selectionTitle={selectionTitle} />
       <FormCreditCard formData={formData} setFormData={setFormData} />
       <ConfirmPayment>
@@ -54,12 +55,12 @@ export default function Payment() {
           <AiFillCheckCircle style={{ marginRight: '20px', color: 'green', width: '40px', height: '40px' }} />
         </div>
         <div>
-          <h3>Pagamento confirmado!</h3>
+          <AreaSubTitle>Pagamento confirmado!</AreaSubTitle>
           <p>Prossiga para escolha de hospedagem e atividades</p>
         </div>
       </ConfirmPayment>
 
-      <button >
+      <button>
         <h2>{selectionTitle.b1}</h2>
       </button>
     </>
