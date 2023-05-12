@@ -9,7 +9,8 @@ body {
   font-family: 'Lexend Deca', sans-serif;
 
   /* colors */
-
+  --color-Cardx2: #FFEED2;
+  --color-Card: #cecece;
   --font-gray: #8e8e8e;
 }
 
