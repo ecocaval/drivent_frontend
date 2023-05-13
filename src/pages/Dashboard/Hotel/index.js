@@ -37,9 +37,11 @@ export default function Hotel() {
       <AreaTitle margin={'0 0 30px 0'}> Escolha de hotel e quarto</AreaTitle>
       <AreaSubTitle>Primeiro, escolha seu hotel</AreaSubTitle>
       <HotelsWrapper>
-        {hotelsWithRooms.map((hotel, index) => (
-          <HotelCard key={index} hotel={hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />
-        ))}
+        {hotelsWithRooms.length > 0
+          ? hotelsWithRooms.map((hotel, index) => (
+            <HotelCard key={index} hotel={hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />
+          ))
+          : 'Buscando hoteis...'}
       </HotelsWrapper>
     </>
   );

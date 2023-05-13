@@ -3,13 +3,9 @@ import styled from 'styled-components';
 export function HotelCard({ hotel, selectedHotel, setSelectedHotel }) {
   return (
     <>
-      <HotelWrapper 
-        selectedHotel={selectedHotel} 
-        hotel={hotel}
-        onClick={() => setSelectedHotel(hotel)}
-      >
-        <HotelImage src={hotel.image} alt="Hotel image" />
-        <HotelName>{hotel.name}</HotelName>
+      <HotelWrapper selectedHotel={selectedHotel} hotel={hotel} onClick={() => setSelectedHotel(hotel)}>
+        <HotelImage src={hotel?.image || '#'} alt="Hotel image" />
+        <HotelName>{hotel?.name || 'hotel'}</HotelName>
         <HotelSubtitleSection>
           <p>Tipos de acomodação:</p>
           <p></p>
@@ -28,9 +24,7 @@ const HotelWrapper = styled.div`
   height: 250px;
   padding: 15px;
   background-color: ${(props) =>
-    props.selectedHotel === props.hotel ? 
-      'var(--selected-hotel-card-bg)' :     
-      'var(--hotel-card-bg)'};
+    props.selectedHotel === props.hotel ? 'var(--selected-hotel-card-bg)' : 'var(--hotel-card-bg)'};
   border-radius: 10px;
   display: flex;
   gap: 10px;
