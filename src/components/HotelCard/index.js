@@ -12,11 +12,11 @@ export function HotelCard({ hotel, selectedHotel, setSelectedHotel }) {
         <HotelName>{hotel.name}</HotelName>
         <HotelSubtitleSection>
           <p>Tipos de acomodação:</p>
-          <p>{hotel.accomodationType}</p>
+          <p></p>
         </HotelSubtitleSection>
         <HotelSubtitleSection>
           <p>Vagas disponíveis:</p>
-          <p>{hotel.hotelVacanciesFree}</p>
+          <p></p>
         </HotelSubtitleSection>
       </HotelWrapper>
     </>
@@ -24,7 +24,7 @@ export function HotelCard({ hotel, selectedHotel, setSelectedHotel }) {
 }
 
 const HotelWrapper = styled.div`
-  width: 200px;
+  min-width: 200px;
   height: 250px;
   padding: 15px;
   background-color: ${(props) =>
