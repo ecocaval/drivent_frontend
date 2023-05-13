@@ -2,18 +2,21 @@ const hotelImageTemplate = 'https://media.istockphoto.com/id/104731717/photo/lux
 
 export const HOTELS_ARRAY_TEMPLATE = [
   {
+    id: 1,
     image: hotelImageTemplate,
     name: 'Hotel 1',
     accomodationType: 'Single e Double',
     hotelVacanciesFree: 100,
   },
   {
+    id: 2,
     image: hotelImageTemplate,
     name: 'Hotel 2',
     accomodationType: 'Single e Double',
     hotelVacanciesFree: 50,
   },
   {
+    id: 3,
     image: hotelImageTemplate,
     name: 'Hotel 3',
     accomodationType: 'Single e Double',

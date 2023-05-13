@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 
-export function HotelCard({ hotel, selectedHotel, setSelectedHotel }) {
+export function HotelCard({ hotel, selectedHotel, setSelectedHotel, idSelectedHotel, setIdSelectedHotel }) {
   return (
     <>
       <HotelWrapper 
         selectedHotel={selectedHotel} 
         hotel={hotel}
-        onClick={() => setSelectedHotel(hotel)}
+        idSelectedHotel={idSelectedHotel}
+        onClick={() =>  {setSelectedHotel(hotel); setIdSelectedHotel(hotel.id);}}
       >
         <HotelImage src={hotel.image} alt="Hotel image" />
         <HotelName>{hotel.name}</HotelName>

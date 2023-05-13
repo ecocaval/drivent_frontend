@@ -10,9 +10,11 @@ import { AreaSubTitle, AreaTitle } from '../../../assets/styles/styledDashboard'
 
 //? Components
 import { HotelCard } from '../../../components/HotelCard';
+import RoomsCard from '../../../components/RoomCard';
 
 export default function Hotel() {
   const [selectedHotel, setSelectedHotel] = useState(null);
+  const [idSelectedHotel, setIdSelectedHotel] = useState(null);
 
   return (
     <>
@@ -25,10 +27,13 @@ export default function Hotel() {
             key={index} 
             hotel={hotel} 
             selectedHotel={selectedHotel}
-            setSelectedHotel={setSelectedHotel} 
+            setSelectedHotel={setSelectedHotel}
+            idSelectedHotel={idSelectedHotel}
+            setIdSelectedHotel={setIdSelectedHotel} 
           />
         ))}
       </HotelsWrapper>
+      {idSelectedHotel ? (<RoomsCard idSelectedHotel={idSelectedHotel}/>) : (<></>)}
     </>
   );
 }
