@@ -1,28 +1,25 @@
 import { AiFillCheckCircle } from 'react-icons/ai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormCreditCard from '../../../components/FormCreditCard';
-import TitleSection from '../../../components/Titles/TitleSection';
 import Ticket from '../../../components/Ticket';
 import styled from 'styled-components';
-import { AreaSubTitle, AreaTitle } from '../../../assets/styles/styledDashboard';
+import { AreaSubTitle, AreaTitle, ProceedButton } from '../../../assets/styles/styledDashboard';
+import useToken from '../../../hooks/useToken';
+import { ticketTypeService } from '../../../services/ticketApi';
 
 export default function Payment() {
-  const [ticket, setTicket] = useState({
-    id: '',
-    TicketType: {
-      id: '',
-      name: '',
-      price: '',
-      isRemote: '',
-      includesHotel: '',
-      createdAt: '',
-      updatedAt: '',
-    },
-    enrollmentId: '',
-    status: '',
-    createdAt: '',
-    updatedAt: '',
-  });
+  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [selectedTicket2, setSelectedTicket2] = useState(null);
+  const [ticketType, setTicketType] = useState([]);
+  const [userSelect, setUserSelect] = useState(undefined);
+
+  const token = useToken();
+  useEffect(async() => {
+    try {
+      const arrTicketType = await ticketTypeService(token);
+      setTicketType(arrTicketType);
+    } catch (error) {}
+  }, []);
 
   const [formData, setFormData] = useState({
     cvc: '',
@@ -37,19 +34,20 @@ export default function Payment() {
     console.log(formData);
   };
 
-  const selectionTitle = {
-    one: 'Primeiro, escolha sua modalidade de ingresso',
-    thow: 'Ótimo! Agora escolha sua modalidade de hospedagem',
-    three: 'Ingresso escolhido',
-    b1: 'RESERVAR INGRESSO',
-    b2: 'FINALIZAR PEDIDO',
-  };
-
   return (
     <>
       <AreaTitle>Ingresso e pagamento</AreaTitle>
-      <Ticket ticket={ticket} setTicket={setTicket} selectionTitle={selectionTitle} />
-      <FormCreditCard formData={formData} setFormData={setFormData} />
+      <Ticket
+        ticketType={ticketType}
+        setTicketType={setTicketType}
+        userSelect={userSelect}
+        setUserSelect={setUserSelect}
+        selectedTicket={selectedTicket}
+        selectedTicket2={selectedTicket2}
+        setSelectedTicket={setSelectedTicket}
+        setSelectedTicket2={setSelectedTicket2}
+      />
+      {userSelect ? <FormCreditCard formData={formData} setFormData={setFormData} /> : null}
       <ConfirmPayment>
         <div>
           <AiFillCheckCircle style={{ marginRight: '20px', color: 'green', width: '40px', height: '40px' }} />
@@ -60,9 +58,9 @@ export default function Payment() {
         </div>
       </ConfirmPayment>
 
-      <button>
-        <h2>{selectionTitle.b1}</h2>
-      </button>
+      {selectedTicket !== null && selectedTicket2 !== null ? (
+        <ProceedButton>{userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}</ProceedButton>
+      ) : null}
     </>
   );
 }

@@ -1,40 +1,38 @@
 import styled from 'styled-components';
 import TitleSection from '../Titles/TitleSection';
+import { useState } from 'react';
+import { CardTicket } from './cardTicket/index.js';
 
-const Ticket = ({ ticket, setTicket, selectionTitle }) => {
+const Ticket = ({
+  ticketType,
+  setUserSelect,
+  selectedTicket,
+  selectedTicket2,
+  setSelectedTicket,
+  setSelectedTicket2,
+}) => {
+  const type = ['Presencial', 'Online'];
+  const withHotel = ['Sem Hotel', 'Com Hotel'];
   return (
     <>
-      <TitleSection title={selectionTitle.one} />
-      <Card>remoto ou presencial</Card>
-      <TitleSection title={selectionTitle.thow} />
-      <Card>com ou sem hotel</Card>
-      <TitleSection title={selectionTitle.three} />
-      <Cardx2>um mais + outro</Cardx2>
+      <TitleSection title={'Primeiro, escolha sua modalidade de ingresso'} />
+      <CardSection>
+        {type.map((e) => (
+          <CardTicket key={e} e={e} selectedTicket={selectedTicket} setSelectedTicket={setSelectedTicket} />
+        ))}
+      </CardSection>
+      <TitleSection title={'Ótimo! Agora escolha sua modalidade de hospedagem'} />
+      {selectedTicket!== null ? <CardSection>
+        {withHotel.map((e) => (
+          <CardTicket key={e} e={e} selectedTicket={selectedTicket2} setSelectedTicket={setSelectedTicket2} />
+        ))}
+      </CardSection>: null}
     </>
   );
 };
 
 export default Ticket;
 
-export const Card = styled.div`
+const CardSection = styled.div`
   display: flex;
-  align-items: center;
-  width: 145px;
-  height: 145px;
-  //  background-color: (selecionado)? while : var(--color-cardx2);
-  border: 1px solid var(--color-card);
-  border-radius: 20px;
-  margin-bottom: 30px;
-`;
-
-export const Cardx2 = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 290px;
-  height: 145px;
-  background-color: var(--color-cardx2);
-  border: 1px solid var(--color-card);
-  border-radius: 20px;
-  margin-bottom: 30px;
 `;
