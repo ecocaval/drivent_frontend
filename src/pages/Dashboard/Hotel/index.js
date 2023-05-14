@@ -4,7 +4,7 @@ import { useState } from 'react';
 import useToken from '../../../hooks/useToken';
 
 //? Styles
-import { AreaSubTitle, AreaTitle } from '../../../assets/styles/styledDashboard';
+import { AreaSubTitle, AreaTitle, GenericButton } from '../../../assets/styles/styledDashboard';
 
 //? Components
 import { HotelCard } from '../../../components/HotelCard';
@@ -34,24 +34,48 @@ export default function Hotel() {
 
   return (
     <>
-      <AreaTitle margin={'0 0 30px 0'}> Escolha de hotel e quarto</AreaTitle>
-      <AreaSubTitle>Primeiro, escolha seu hotel</AreaSubTitle>
-      <HotelsWrapper>
-        {hotelsWithRooms.length > 0
-          ? hotelsWithRooms.map((hotel, index) => (
-            <HotelCard key={index} hotel={hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />
-          ))
-          : 'Buscando hoteis...'}
-      </HotelsWrapper>
+      <AreaWrapper>
+        <AreaTitle margin={'0 0 30px 0'}> Escolha de hotel e quarto</AreaTitle>
+        <AreaSubTitle>Primeiro, escolha seu hotel</AreaSubTitle>
+        <HotelsWrapper>
+          {hotelsWithRooms.length > 0
+            ? hotelsWithRooms.map((hotel, index) => (
+              <HotelCard
+                key={index}
+                hotel={hotel}
+                selectedHotel={selectedHotel}
+                setSelectedHotel={setSelectedHotel}
+              />
+            ))
+            : 'Buscando hoteis...'}
+        </HotelsWrapper>
+        <AreaSubTitle>Ótima pedida! Agora escolha seu quarto</AreaSubTitle>
+        <GenericButton margin={'20px 0 0 0'}> RESERVAR QUARTO </GenericButton>
+      </AreaWrapper>
     </>
   );
 }
+
+const AreaWrapper = styled.div`
+  height: 100%;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #e3ae75;
+    border-radius: 100px;
+  }
+`;
 
 const HotelsWrapper = styled.div`
   display: flex;
   gap: 20px;
   overflow-x: auto;
   padding: 30px 0 10px 0;
+  margin-bottom: 20px;
 
   &::-webkit-scrollbar {
     height: 10px;

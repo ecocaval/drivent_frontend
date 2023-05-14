@@ -1,18 +1,39 @@
+//? Libraries
+import { useEffect } from 'react';
 import styled from 'styled-components';
+import { useState } from 'react';
+
+//? Utils
+import calculateHotelVacancies from './utils/calculateHotelVacancies';
+import getRoomsDescription from './utils/getRoomsDescription';
 
 export function HotelCard({ hotel, selectedHotel, setSelectedHotel }) {
+  const [hotelVacancies, setHotelVacancies] = useState(null);
+  const [roomsDescription, setRoomsDescription] = useState(null);
+
+  useEffect(() => {
+    setHotelVacancies(calculateHotelVacancies(hotel));
+    setRoomsDescription(getRoomsDescription(hotel));
+  }, []);
+
   return (
     <>
-      <HotelWrapper selectedHotel={selectedHotel} hotel={hotel} onClick={() => setSelectedHotel(hotel)}>
+      <HotelWrapper
+        selectedHotel={selectedHotel}
+        hotel={hotel}
+        onClick={() => {
+          selectedHotel === hotel ? setSelectedHotel(null) : setSelectedHotel(hotel);
+        }}
+      >
         <HotelImage src={hotel?.image || '#'} alt="Hotel image" />
         <HotelName>{hotel?.name || 'hotel'}</HotelName>
         <HotelSubtitleSection>
           <p>Tipos de acomodação:</p>
-          <p></p>
+          <p>{roomsDescription}</p>
         </HotelSubtitleSection>
         <HotelSubtitleSection>
           <p>Vagas disponíveis:</p>
-          <p></p>
+          <p>{hotelVacancies}</p>
         </HotelSubtitleSection>
       </HotelWrapper>
     </>
