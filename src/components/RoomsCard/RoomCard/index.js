@@ -39,7 +39,7 @@ export default function RoomCard({ room, selectedRoom, setSelectedRoom, roomIsRe
           }
         }}
       >
-        <h4>{String(room.id)}</h4>
+        <h4>{String(room.name)}</h4>
         <IconContainer>
           <IconBox key={room.id}>{people}</IconBox>
         </IconContainer>
