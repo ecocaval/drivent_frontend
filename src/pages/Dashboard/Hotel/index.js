@@ -27,7 +27,7 @@ export default function Hotel() {
 
   const [hotelsWithoutRooms, setHotelsWithoutRooms] = useState([]);
   const [hotelsWithRooms, setHotelsWithRooms] = useState([]);
-  const [userTicketIncludesHotel, setUserTicketIncludesHotel] = useState(false);
+  const [userTicketIncludesHotel, setUserTicketIncludesHotel] = useState(true);
   const [userTicketIsPaid, setUserTicketIsPaid] = useState(true);
 
   const [roomIsReserved, setRoomIsReserved] = useState(false);
@@ -50,13 +50,7 @@ export default function Hotel() {
     <>
       <AreaWrapper>
         <AreaTitle margin={'0 0 30px 0'}> Escolha de hotel e quarto</AreaTitle>
-        {userTicketIncludesHotel && (
-          <AreaSubTitle>
-            {!roomIsReserved && userTicketIsPaid && userTicketIncludesHotel
-              ? 'Primeiro, escolha seu hotel'
-              : userTicketIsPaid && userTicketIncludesHotel && 'Você já escolheu seu quarto:'}
-          </AreaSubTitle>
-        )}
+        <AreaSubTitle>{!roomIsReserved ? 'Primeiro, escolha seu hotel' : ('Você já escolheu seu quarto:')}</AreaSubTitle>
         <HotelsWrapper userTicketIncludesHotel={userTicketIncludesHotel}>
           {hotelsWithRooms.length > 0 ? (
             hotelsWithRooms.map((hotel, index) =>
