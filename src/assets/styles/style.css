@@ -9,15 +9,17 @@ body {
   font-family: 'Lexend Deca', sans-serif;
 
   /* colors */
-  --color-ticketcardx2: #FFEED2;
-  --color-ticketcard: #CECECE;
+  --card-default-grayx2: #FFEED2;
+  --card-default-gray: #CECECE;
+  --card-default-strong-gray: #7a7878;
+  --card-default-light-gray: #EBEBEB;
   --font-gray: #8E8E8E;
-  --hotel-card-bg: #EBEBEB;
-  --selected-hotel-card-bg: #FFEED2;
+  --selected-card-bg: #FFEED2;
   --hotel-light-dark: #343434;
   --hotel-strong-dark: #3C3C3C;
   --button-proceed: #E0E0E0;
-
+  --page-yellow-theme: #E3AE75;
+  --page-pink-theme: #D675A1;
 }
 
 input {

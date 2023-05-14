@@ -8,8 +8,6 @@ export default function getRoomsDescription(hotel) {
     return a.capacity - b.capacity;
   });
 
-  console.log(rooms);
-
   for (let i = 0; i < rooms.length; i++) {
     const roomCapacity = rooms[i].capacity;
 

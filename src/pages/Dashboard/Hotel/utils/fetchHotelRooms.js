@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default async function fetchHotelRooms(token, hotelId) {
   try {
-    const hotelsWithRooms = await axios.get(`http://localhost:4000/hotels/${Number(hotelId)}`, {
+    const hotelsWithRooms = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/hotels/${Number(hotelId)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
