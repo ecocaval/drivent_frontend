@@ -2,11 +2,10 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { BsPerson } from 'react-icons/bs';
 import { AreaSubTitle, AreaTitle } from '../../assets/styles/styledDashboard';
-import { ROOMS_ARRAY_TEMPLATE } from '../../pages/Dashboard/Hotel/utils/roomsArrayTemplate';
 
-export default function RoomsCard({ idSelectedHotel }) {
+export default function RoomsCard({ idSelectedHotel, hotel }) {
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const filteredHotelsArray = ROOMS_ARRAY_TEMPLATE.filter((hotel) => hotel.id === idSelectedHotel);
+  const filteredHotelsArray = hotel.filter((hotel) => hotel.id === idSelectedHotel);
   return (
     <>
       <AreaTitle margin={'0 0 30px 0'}></AreaTitle>
@@ -27,13 +26,15 @@ export default function RoomsCard({ idSelectedHotel }) {
 }
 
 function RoomCard({ room, selectedRoom, setSelectedRoom, capacity }) {
+  const people = Array.from({ length: capacity }, (_, i) => <BsPerson key={i} size={25} />);
+
   return (
     <>
       <RoomWrapper room={room} selectedRoom={selectedRoom} setSelectedRoom={setSelectedRoom} onClick={() => setSelectedRoom(room)}>
         <h4>{room}</h4>
         <IconContainer>
           <IconBox key={room}>
-            <BsPerson key={room*2} size={25} />
+            {people}
           </IconBox>
         </IconContainer>
       </RoomWrapper>

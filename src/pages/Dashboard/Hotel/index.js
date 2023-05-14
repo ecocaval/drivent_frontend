@@ -52,7 +52,7 @@ export default function Hotel() {
           ))
           : 'Buscando hoteis...'}
       </HotelsWrapper>
-      {idSelectedHotel ? <RoomsCard idSelectedHotel={idSelectedHotel} /> : <></>}
+      {idSelectedHotel ? <RoomsCard idSelectedHotel={idSelectedHotel} hotel={hotelsWithRooms}/> : <></>}
     </>
   );
 }
