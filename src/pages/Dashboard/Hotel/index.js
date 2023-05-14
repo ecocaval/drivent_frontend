@@ -2,13 +2,14 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import useToken from '../../../hooks/useToken';
+import { useEffect } from 'react';
 
 //? Styles
 import { AreaSubTitle, AreaTitle } from '../../../assets/styles/styledDashboard';
 
 //? Components
 import { HotelCard } from '../../../components/HotelCard';
-import { useEffect } from 'react';
+import RoomsCard from '../../../components/RoomCard';
 
 //? Utils
 import fetchHotelsWithoutRooms from './utils/fetchHotelsWithoutRooms';
@@ -21,6 +22,7 @@ export default function Hotel() {
   const [hotelsWithRooms, setHotelsWithRooms] = useState([]);
 
   const [selectedHotel, setSelectedHotel] = useState(null);
+  const [idSelectedHotel, setIdSelectedHotel] = useState(null);
 
   useEffect(() => {
     fetchHotelsWithoutRooms(token, setHotelsWithoutRooms);
@@ -39,10 +41,18 @@ export default function Hotel() {
       <HotelsWrapper>
         {hotelsWithRooms.length > 0
           ? hotelsWithRooms.map((hotel, index) => (
-            <HotelCard key={index} hotel={hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />
+            <HotelCard
+              key={index}
+              hotel={hotel}
+              selectedHotel={selectedHotel}
+              setSelectedHotel={setSelectedHotel}
+              idSelectedHotel={idSelectedHotel}
+              setIdSelectedHotel={setIdSelectedHotel}
+            />
           ))
           : 'Buscando hoteis...'}
       </HotelsWrapper>
+      {idSelectedHotel ? <RoomsCard idSelectedHotel={idSelectedHotel} hotel={hotelsWithRooms}/> : <></>}
     </>
   );
 }

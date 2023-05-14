@@ -7,4 +7,5 @@ export default async function fetchHotelsWithRooms(token, hotelsWithoutRooms, se
     hotelsWithRooms.push(hotelWithRooms);
   }
   setHotelsWithRooms(hotelsWithRooms);
+  console.log(hotelsWithRooms);
 }
