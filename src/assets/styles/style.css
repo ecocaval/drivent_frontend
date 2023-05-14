@@ -9,13 +9,14 @@ body {
   font-family: 'Lexend Deca', sans-serif;
 
   /* colors */
-  --color-cardx2: #FFEED2;
-  --color-card: #CECECE;
+  --color-ticketcardx2: #FFEED2;
+  --color-ticketcard: #CECECE;
   --font-gray: #8E8E8E;
   --hotel-card-bg: #EBEBEB;
   --selected-hotel-card-bg: #FFEED2;
   --hotel-light-dark: #343434;
   --hotel-strong-dark: #3C3C3C;
+  --button-proceed: #E0E0E0;
 
 }
 

@@ -3,21 +3,24 @@ import styled from 'styled-components';
 export function HotelCard({ hotel, selectedHotel, setSelectedHotel, idSelectedHotel, setIdSelectedHotel }) {
   return (
     <>
-      <HotelWrapper 
-        selectedHotel={selectedHotel} 
+      <HotelWrapper
+        selectedHotel={selectedHotel}
         hotel={hotel}
         idSelectedHotel={idSelectedHotel}
-        onClick={() =>  {setSelectedHotel(hotel); setIdSelectedHotel(hotel.id);}}
+        onClick={() => {
+          setSelectedHotel(hotel);
+          setIdSelectedHotel(hotel.id);
+        }}
       >
-        <HotelImage src={hotel.image} alt="Hotel image" />
-        <HotelName>{hotel.name}</HotelName>
+        <HotelImage src={hotel?.image || '#'} alt="Hotel image" />
+        <HotelName>{hotel?.name || 'hotel'}</HotelName>
         <HotelSubtitleSection>
           <p>Tipos de acomodação:</p>
-          <p>{hotel.accomodationType}</p>
+          <p></p>
         </HotelSubtitleSection>
         <HotelSubtitleSection>
           <p>Vagas disponíveis:</p>
-          <p>{hotel.hotelVacanciesFree}</p>
+          <p></p>
         </HotelSubtitleSection>
       </HotelWrapper>
     </>
@@ -25,13 +28,11 @@ export function HotelCard({ hotel, selectedHotel, setSelectedHotel, idSelectedHo
 }
 
 const HotelWrapper = styled.div`
-  width: 200px;
+  min-width: 200px;
   height: 250px;
   padding: 15px;
   background-color: ${(props) =>
-    props.selectedHotel === props.hotel ? 
-      'var(--selected-hotel-card-bg)' :     
-      'var(--hotel-card-bg)'};
+    props.selectedHotel === props.hotel ? 'var(--selected-hotel-card-bg)' : 'var(--hotel-card-bg)'};
   border-radius: 10px;
   display: flex;
   gap: 10px;
