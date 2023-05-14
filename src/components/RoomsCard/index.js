@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { BsPerson, BsPersonFill } from 'react-icons/bs';
 import { AreaSubTitle, AreaTitle } from '../../assets/styles/styledDashboard';
+import RoomCard from './RoomCard';
 
 export default function RoomsCard({ idSelectedHotel, hotel }) {
   const [selectedRoom, setSelectedRoom] = useState(null);
@@ -22,27 +22,6 @@ export default function RoomsCard({ idSelectedHotel, hotel }) {
           />
         ))}
       </Room>
-    </>
-  );
-}
-
-function RoomCard({ roomId, vaccanciesBooked, selectedRoom, setSelectedRoom, capacity }) {
-  let auxVaccanciesBooked = vaccanciesBooked;
-
-  // Filla os usuários de acordo com os quartos que já foram reservados
-  const people = Array.from({ length: capacity }, (_, i) => {
-    auxVaccanciesBooked--;
-    return auxVaccanciesBooked + 1 > 0 ? <BsPersonFill key={i} size={25} /> : <BsPerson key={i} size={25} />;
-  });
-
-  return (
-    <>
-      <RoomWrapper room={roomId} selectedRoom={selectedRoom} setSelectedRoom={setSelectedRoom}>
-        <h4>{String(roomId)}</h4>
-        <IconContainer>
-          <IconBox key={roomId}>{people}</IconBox>
-        </IconContainer>
-      </RoomWrapper>
     </>
   );
 }

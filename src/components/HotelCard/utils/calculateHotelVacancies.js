@@ -5,6 +5,7 @@ export default function calculateHotelVacancies(hotel) {
 
   for (let i = 0; i < rooms.length; i++) {
     totalVacancies += rooms[i].capacity;
+    totalVacancies -= rooms[i].vaccanciesBooked;
   }
 
   return totalVacancies;

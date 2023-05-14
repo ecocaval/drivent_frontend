@@ -9,11 +9,11 @@ import { AreaSubTitle, AreaTitle, GenericButton } from '../../../assets/styles/s
 
 //? Components
 import { HotelCard } from '../../../components/HotelCard';
+import RoomsCard from '../../../components/RoomsCard';
 
 //? Utils
 import fetchHotelsWithoutRooms from './utils/fetchHotelsWithoutRooms';
 import fetchHotelsWithRooms from './utils/fetchHotelsWithRooms';
-import RoomsCard from '../../../components/RoomCard';
 
 export default function Hotel() {
   const token = useToken();
