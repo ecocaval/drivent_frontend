@@ -17,17 +17,14 @@ export default function getRoomsDescription(hotel) {
       roomsHashTable[String(roomCapacity)] = true;
 
       if (roomCapacity === 1) {
-        roomsDescription += 'Single';
-        
+        roomsDescription += 'Single';        
       } else if (roomCapacity === 2) {
-
         if (roomsDescription.length > 0) {
           roomsDescription += ', Double';
         } else {
           roomsDescription += 'Double';
         }
-      } else if (roomCapacity === 3) {
-        
+      } else if (roomCapacity === 3) {        
         if (roomsDescription.length > 0) {
           roomsDescription += ', Triple';
         } else {

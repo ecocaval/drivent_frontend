@@ -1,6 +1,7 @@
 //? Libraries
 import styled from 'styled-components';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import useToken from '../../../hooks/useToken';
 
 //? Styles
@@ -8,11 +9,11 @@ import { AreaSubTitle, AreaTitle, GenericButton } from '../../../assets/styles/s
 
 //? Components
 import { HotelCard } from '../../../components/HotelCard';
-import { useEffect } from 'react';
 
 //? Utils
 import fetchHotelsWithoutRooms from './utils/fetchHotelsWithoutRooms';
 import fetchHotelsWithRooms from './utils/fetchHotelsWithRooms';
+import RoomsCard from '../../../components/RoomCard';
 
 export default function Hotel() {
   const token = useToken();
@@ -49,8 +50,14 @@ export default function Hotel() {
             ))
             : 'Buscando hoteis...'}
         </HotelsWrapper>
-        <AreaSubTitle>Ótima pedida! Agora escolha seu quarto</AreaSubTitle>
-        <GenericButton margin={'20px 0 0 0'}> RESERVAR QUARTO </GenericButton>
+        {selectedHotel ? (
+          <>
+            <RoomsCard idSelectedHotel={selectedHotel.id} hotel={hotelsWithRooms} />
+            <GenericButton margin={'20px 0 0 0'}> RESERVAR QUARTO </GenericButton>
+          </>
+        ) : (
+          <></>
+        )}
       </AreaWrapper>
     </>
   );
@@ -59,9 +66,10 @@ export default function Hotel() {
 const AreaWrapper = styled.div`
   height: 100%;
   overflow-y: auto;
+  padding: 15px;
 
   &::-webkit-scrollbar {
-    width: 10px;
+    width: 7px;
   }
 
   &::-webkit-scrollbar-thumb {
@@ -78,7 +86,7 @@ const HotelsWrapper = styled.div`
   margin-bottom: 20px;
 
   &::-webkit-scrollbar {
-    height: 10px;
+    height: 7px;
   }
 
   &::-webkit-scrollbar-thumb {
