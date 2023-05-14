@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import useToken from '../../../hooks/useToken';
-import { useContext } from 'react';
 
 //? Styles
 import { AreaSubTitle, AreaTitle, GenericButton } from '../../../assets/styles/styledDashboard';
