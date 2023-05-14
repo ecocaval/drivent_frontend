@@ -7,7 +7,7 @@ import { useState } from 'react';
 import calculateHotelVacancies from './utils/calculateHotelVacancies';
 import getRoomsDescription from './utils/getRoomsDescription';
 
-export function HotelCard({ hotel, selectedHotel, setSelectedHotel }) {
+export function HotelCard({ hotel, selectedHotel, setSelectedHotel, setSelectedRoom, roomIsReserved }) {
   const [hotelVacancies, setHotelVacancies] = useState(null);
   const [roomsDescription, setRoomsDescription] = useState(null);
 
@@ -22,7 +22,10 @@ export function HotelCard({ hotel, selectedHotel, setSelectedHotel }) {
         selectedHotel={selectedHotel}
         hotel={hotel}
         onClick={() => {
-          selectedHotel === hotel ? setSelectedHotel(null) : setSelectedHotel(hotel);
+          if(!roomIsReserved) {
+            selectedHotel === hotel ? setSelectedHotel(null) : setSelectedHotel(hotel);
+            setSelectedRoom(null);
+          }
         }}
       >
         <HotelImage src={hotel?.image || '#'} alt="Hotel image" />
@@ -45,7 +48,7 @@ const HotelWrapper = styled.div`
   height: 250px;
   padding: 15px;
   background-color: ${(props) =>
-    props.selectedHotel === props.hotel ? 'var(--selected-hotel-card-bg)' : 'var(--hotel-card-bg)'};
+    props.selectedHotel === props.hotel ? 'var(--selected-card-bg)' : 'var(--card-default-light-gray)'};
   border-radius: 10px;
   display: flex;
   gap: 10px;

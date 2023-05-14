@@ -10,11 +10,7 @@ export default async function fetchHotelsWithRooms(token, hotelsWithoutRooms, se
 
     hotelWithRooms.Rooms = hotelWithRooms.Rooms.map((room) => {
       if (roomIdsBooked.includes(room.id)) {
-        if (!room.vaccanciesBooked) {
-          room.vaccanciesBooked = 1;
-        } else {
-          room.vaccanciesBooked += 1;
-        }
+        !room.vaccanciesBooked ? (room.vaccanciesBooked = 1) : room.vaccanciesBooked++;
       } else {
         room.vaccanciesBooked = 0;
       }

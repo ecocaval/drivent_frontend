@@ -14,8 +14,8 @@ export const CardTickets = styled.div`
   align-items: center;
   width: 145px;
   height: 145px;
-  background-color: ${(props) => (props.selectedTicket === props.e ? 'var(--color-ticketcardx2)' : 'var(while)')};
-  border: 1px solid var(--color-ticketcard);
+  background-color: ${(props) => (props.selectedTicket === props.e ? 'var(--card-default-grayx2)' : 'var(while)')};
+  border: 1px solid var(--card-default-gray);
   border-radius: 20px;
   margin: 0 24px 44px 0;
 `;
