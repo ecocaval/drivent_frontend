@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import FormCreditCard from '../../../components/FormCreditCard';
 import Ticket from '../../../components/Ticket';
 import styled from 'styled-components';
-import { AreaSubTitle, AreaTitle, ProceedButton } from '../../../assets/styles/styledDashboard';
+import { AreaSubTitle, AreaTitle, GenericButton } from '../../../assets/styles/styledDashboard';
 import useToken from '../../../hooks/useToken';
 import { ticketTypeService } from '../../../services/ticketApi';
 
@@ -59,7 +59,7 @@ export default function Payment() {
       </ConfirmPayment>
 
       {selectedTicket !== null && selectedTicket2 !== null ? (
-        <ProceedButton>{userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}</ProceedButton>
+        <GenericButton>{userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}</GenericButton>
       ) : null}
     </>
   );

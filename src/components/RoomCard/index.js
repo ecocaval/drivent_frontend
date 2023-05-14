@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { BsPerson } from 'react-icons/bs';
+import { BsPerson, BsPersonFill } from 'react-icons/bs';
 import { AreaSubTitle, AreaTitle } from '../../assets/styles/styledDashboard';
 
 export default function RoomsCard({ idSelectedHotel, hotel }) {
@@ -14,7 +14,8 @@ export default function RoomsCard({ idSelectedHotel, hotel }) {
         {filteredHotelsArray[0].Rooms.map((r, index) => (
           <RoomCard
             key={index * 2}
-            room={r.id}
+            roomId={r.id}
+            vaccanciesBooked={r.vaccanciesBooked}
             selectedRoom={selectedRoom}
             setSelectedRoom={setSelectedRoom}
             capacity={r.capacity}
@@ -25,17 +26,21 @@ export default function RoomsCard({ idSelectedHotel, hotel }) {
   );
 }
 
-function RoomCard({ room, selectedRoom, setSelectedRoom, capacity }) {
-  const people = Array.from({ length: capacity }, (_, i) => <BsPerson key={i} size={25} />);
+function RoomCard({ roomId, vaccanciesBooked, selectedRoom, setSelectedRoom, capacity }) {
+  let auxVaccanciesBooked = vaccanciesBooked;
+
+  // Filla os usuários de acordo com os quartos que já foram reservados
+  const people = Array.from({ length: capacity }, (_, i) => {
+    auxVaccanciesBooked--;
+    return auxVaccanciesBooked + 1 > 0 ? <BsPersonFill key={i} size={25} /> : <BsPerson key={i} size={25} />;
+  });
 
   return (
     <>
-      <RoomWrapper room={room} selectedRoom={selectedRoom} setSelectedRoom={setSelectedRoom} onClick={() => setSelectedRoom(room)}>
-        <h4>{room}</h4>
+      <RoomWrapper room={roomId} selectedRoom={selectedRoom} setSelectedRoom={setSelectedRoom}>
+        <h4>{String(roomId)}</h4>
         <IconContainer>
-          <IconBox key={room}>
-            {people}
-          </IconBox>
+          <IconBox key={roomId}>{people}</IconBox>
         </IconContainer>
       </RoomWrapper>
     </>
@@ -62,11 +67,7 @@ const RoomWrapper = styled.button`
   align-items: center;
   margin-bottom: 8px;
   cursor: pointer;
-  background-color: ${(props) =>
-    props.selectedRoom === props.room ?
-      '#FFEED2':
-      '#FFFFFF'
-};
+  background-color: ${(props) => (props.selectedRoom === props.room ? '#FFEED2' : '#FFFFFF')};
 
   padding: 10px;
 
@@ -84,6 +85,4 @@ const IconContainer = styled.div`
   display: flex;
 `;
 
-const IconBox = styled.div`
-
-`;
+const IconBox = styled.div``;

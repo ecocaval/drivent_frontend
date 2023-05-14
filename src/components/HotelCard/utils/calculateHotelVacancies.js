@@ -1,0 +1,11 @@
+export default function calculateHotelVacancies(hotel) {
+  const { Rooms: rooms } = hotel;
+
+  let totalVacancies = 0;
+
+  for (let i = 0; i < rooms.length; i++) {
+    totalVacancies += rooms[i].capacity;
+  }
+
+  return totalVacancies;
+}

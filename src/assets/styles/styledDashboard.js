@@ -11,9 +11,10 @@ export const AreaSubTitle = styled.h3`
   color: var(--font-gray);
 `;
 
-export const ProceedButton = styled.button`
+export const GenericButton = styled.button`
   width: 182px;
   height: 37px;
+  margin: ${(props) => props.margin || '0'};
   background: var(--button-proceed);
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
