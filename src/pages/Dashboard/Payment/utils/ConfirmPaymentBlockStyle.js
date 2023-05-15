@@ -3,11 +3,18 @@ import styled from 'styled-components';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { AreaTitle } from '../../../../assets/styles/styledDashboard';
 import TitleSection from '../../../../components/Titles/TitleSection';
+import { CardTicketsx2 } from '../../../../components/Ticket/cardTicket/index.js';
 
-export function ConfirmPaymentBlock() {
+export function ConfirmPaymentBlock({ selectedTicket, selectedTicket2 }) {
   return (
     <ConfirmPaymentBlockStyle>
       <AreaTitle>Ingresso e pagamento</AreaTitle>
+      <CardTicketsx2>
+        <div>
+          {selectedTicket.name} {selectedTicket.name === 'Online' ? null : '+'} {selectedTicket.name === 'Online' ? null : selectedTicket2.name}
+        </div>
+        <p>R${selectedTicket.price}</p>
+      </CardTicketsx2>
       <TitleSection title={'Pagamento'} />
       <ConfirmPayment>
         <div>

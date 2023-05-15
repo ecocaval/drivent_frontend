@@ -9,10 +9,8 @@ import { toast } from 'react-toastify';
 import TitleSection from '../../../components/Titles/TitleSection';
 import { getPersonalInformations } from '../../../services/enrollmentApi';
 import { PopUp } from '../../../components/PopUp';
-import {
-  NO_ENROLLMENT_MESSAGE
-} from './utils/defaultMessages';
 import { ConfirmPaymentBlock } from './utils/ConfirmPaymentBlockStyle';
+import { NO_ENROLLMENT_MESSAGE } from './utils/defaultMessages';
 export default function Payment() {
   const [ticketUser, setTicketUser] = useState({});
   const [selectedTicket, setSelectedTicket] = useState({});
@@ -37,6 +35,7 @@ export default function Payment() {
   }, []);
   const types = () => {
     const amountOfTypes = ticketType.length;
+    const valueOfTrueTrue = ticketType.find(e => (e.includesHotel == false && e.isRemote == false));
     const possibilities = [{ id: '', name: 'Presencial', price: 0 }, {}, {}, {}];
     for (let i = 0; i < amountOfTypes; i++) {
       const possibleValues = possibilities[i + 1];
@@ -51,7 +50,7 @@ export default function Payment() {
         } else {
           possibleValues['id'] = ticketType[i].id;
           possibleValues['name'] = 'Com Hotel';
-          possibleValues['price'] = 200;
+          possibleValues['price'] = ticketType[i].price - valueOfTrueTrue.price;
         }
       } else {
         possibleValues['id'] = ticketType[i].id;
@@ -100,11 +99,14 @@ export default function Payment() {
     const tickets = await getTickets(token);
     setTicketUser(tickets);
   }
+  console.log(ticketType);
 
   //confirmação de pagamento
-  if (ticketUser.status && ticketUser.status === 'PAID') {
+  if (ticketUser.status && ticketUser.status === 'PAID' && selectedTicket && selectedTicket2) {
     return (
-      <ConfirmPaymentBlock/>
+      <>
+        <ConfirmPaymentBlock selectedTicket={selectedTicket} selectedTicket2={selectedTicket2}/>
+      </>
     );
   };
 
@@ -113,22 +115,21 @@ export default function Payment() {
     return (
       <>
         <AreaTitle>Ingresso e pagamento</AreaTitle>
-        {!userSelect ? (
-          <Ticket
-            types={types}
-            ticketType={ticketType}
-            setTicketType={setTicketType}
-            userSelect={userSelect}
-            setUserSelect={setUserSelect}
-            selectedTicket={selectedTicket}
-            selectedTicket2={selectedTicket2}
-            setSelectedTicket={setSelectedTicket}
-            setSelectedTicket2={setSelectedTicket2}
-          />
-        ) : null}
+        (
+        <Ticket
+          types={types}
+          ticketType={ticketType}
+          setTicketType={setTicketType}
+          userSelect={userSelect}
+          setUserSelect={setUserSelect}
+          selectedTicket={selectedTicket}
+          selectedTicket2={selectedTicket2}
+          setSelectedTicket={setSelectedTicket}
+          setSelectedTicket2={setSelectedTicket2}
+        />
+        )
         {abiliter ? <TitleSection title={'Pagamento'} /> : null}
         {userSelect && abiliter ? <FormCreditCard formData={formData} setFormData={setFormData} /> : null}
-
         {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
           !userSelect ? (
             <Pricie>
@@ -140,7 +141,7 @@ export default function Payment() {
             </Pricie>
           ) : null
         ) : null}
-        { ticketUser.status === 'PAID' ? <ConfirmPaymentBlock/> : (selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
+        {ticketUser.status === 'PAID' ? <ConfirmPaymentBlock /> : (selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
           <GenericButton onClick={userSelect ? pay : reserve}>
             {userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}
           </GenericButton>
@@ -150,10 +151,10 @@ export default function Payment() {
   } else if (!personalInformations) {   //caso não tenha inscrição
     return (
       <PopUp>
-        { NO_ENROLLMENT_MESSAGE }
+        {NO_ENROLLMENT_MESSAGE}
       </PopUp>
     );
-  } else {   
+  } else {
     return (
       'loading...'
     );
