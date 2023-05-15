@@ -2,10 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
 import styled from 'styled-components';
-import TitleSection from '../Titles/TitleSection';
 
 const FormCreditCard = ({ formData, setFormData }) => {
-  const { cvc, expiry, name, number } = formData;
+  const { cvc, expiry, name, number, issuer } = formData;
   const [focusedField, setFocusedField] = useState('');
 
   const inputRefs = {
@@ -13,17 +12,12 @@ const FormCreditCard = ({ formData, setFormData }) => {
     name: useRef(null),
     expiry: useRef(null),
     cvc: useRef(null),
+    issuer: issuer,
   };
 
   const handleInputFocus = (fieldName) => {
     setFocusedField(fieldName);
   };
-
-  useEffect(() => {
-    if (focusedField && inputRefs[focusedField].current) {
-      inputRefs[focusedField].current.focus();
-    }
-  }, [focusedField, inputRefs]);
 
   const onInputChange = (event) => {
     const { name, value } = event.target;
@@ -32,12 +26,21 @@ const FormCreditCard = ({ formData, setFormData }) => {
       [name]: value,
     }));
   };
+  const handleCallback = ({ issuer }) => {
+    setFormData({ ...formData, issuer });
+  };
   return (
     <>
-      <TitleSection title={'Pagamento'} />
       <FormCreditCardStyle id="PaymentForm">
         <div className="cardContainer">
-          <Cards cvc={cvc} expiry={expiry} focused={focusedField} name={name} number={number} />
+          <Cards
+            cvc={cvc}
+            expiry={expiry}
+            focused={focusedField}
+            name={name}
+            number={number}
+            callback={handleCallback}
+          />
         </div>
 
         <form>
