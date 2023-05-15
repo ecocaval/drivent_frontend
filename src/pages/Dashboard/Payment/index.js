@@ -9,8 +9,8 @@ import { toast } from 'react-toastify';
 import TitleSection from '../../../components/Titles/TitleSection';
 import { getPersonalInformations } from '../../../services/enrollmentApi';
 import { PopUp } from '../../../components/PopUp';
+import { ConfirmPaymentBlock } from './utils/ConfirmPaymentBlockStyle';
 import { NO_ENROLLMENT_MESSAGE } from './utils/defaultMessages';
-import { CardTicketsx2 } from '../../../components/Ticket/cardTicket/index.js';
 export default function Payment() {
   const [ticketUser, setTicketUser] = useState({});
   const [selectedTicket, setSelectedTicket] = useState({});
@@ -24,6 +24,11 @@ export default function Payment() {
     try {
       const arrTicketType = await ticketTypeService(token);
       setTicketType(arrTicketType);
+
+      //pega os tickets
+      const tickets = await getTickets(token);
+      console.log(tickets);
+      if (tickets) setTicketUser(tickets);
     } catch (error) {}
 
     const personalInformations = await getPersonalInformations(token);
@@ -33,7 +38,6 @@ export default function Payment() {
     const amountOfTypes = ticketType.length;
     const valueOfTrueTrue = ticketType.find((e) => e.includesHotel == false && e.isRemote == false);
     const possibilities = [{ id: '', name: 'Presencial', price: 0 }, {}, {}, {}];
-    console.log(valueOfTrueTrue);
     for (let i = 0; i < amountOfTypes; i++) {
       const possibleValues = possibilities[i + 1];
       if (ticketType[i].isRemote === false) {
@@ -83,9 +87,9 @@ export default function Payment() {
     if (formData.name.split(' ').length !== 2) return toast('Isira nome e sobrenome!');
     if (
       Number(formData.expiry.slice(0, 2)) < 1 ||
-      Number(formData.expiry.slice(0, 2)) > 31 ||
+      Number(formData.expiry.slice(0, 2)) > 12 ||
       Number(formData.expiry.slice(2, 4)) < 1 ||
-      Number(formData.expiry.slice(2, 4)) > 12
+      Number(formData.expiry.slice(2, 4)) > 80
     )
       return toast('Esta data é invalida!');
     let body = { ticketTypeId: selectedTicket.id };
@@ -98,51 +102,38 @@ export default function Payment() {
   }
 
   //confirmação de pagamento
-  if (ticketUser.status && ticketUser.status === 'PAID') {
+  if (ticketUser.status && ticketUser.status === 'PAID' && selectedTicket && selectedTicket2) {
     return (
-      <ConfirmPaymentBlock/>
+      <>
+        <ConfirmPaymentBlock selectedTicket={selectedTicket} selectedTicket2={selectedTicket2} />
+      </>
     );
-  };
+  }
 
   //caso tenha inscrição, mas não possui pagamento
   if (personalInformations) {
     return (
       <>
-        <AreaTitle>Ingresso e pagamento</AreaTitle>
-        {!userSelect ? (
-          <Ticket
-            types={types}
-            ticketType={ticketType}
-            setTicketType={setTicketType}
-            userSelect={userSelect}
-            setUserSelect={setUserSelect}
-            selectedTicket={selectedTicket}
-            selectedTicket2={selectedTicket2}
-            setSelectedTicket={setSelectedTicket}
-            setSelectedTicket2={setSelectedTicket2}
-          />
-        ) : abiliter ? (
-          <CardTicketsx2>
-            <div>
-              {selectedTicket.name} {selectedTicket.name === 'Online' ? null : '+'}{' '}
-              {selectedTicket.name === 'Online' ? null : selectedTicket2.name}
-            </div>
-            <p>R${selectedTicket.price}</p>
-          </CardTicketsx2>
+        {!abiliter ? (
+          <>
+            <AreaTitle>Ingresso e pagamento</AreaTitle>
+
+            <Ticket
+              types={types}
+              ticketType={ticketType}
+              setTicketType={setTicketType}
+              userSelect={userSelect}
+              setUserSelect={setUserSelect}
+              selectedTicket={selectedTicket}
+              selectedTicket2={selectedTicket2}
+              setSelectedTicket={setSelectedTicket}
+              setSelectedTicket2={setSelectedTicket2}
+            />
+          </>
         ) : null}
+
         {abiliter ? <TitleSection title={'Pagamento'} /> : null}
         {userSelect && abiliter ? <FormCreditCard formData={formData} setFormData={setFormData} /> : null}
-
-        <ConfirmPayment>
-          <div>
-            <AiFillCheckCircle style={{ marginRight: '20px', color: 'green', width: '40px', height: '40px' }} />
-          </div>
-          <div>
-            <AreaSubTitle>Pagamento confirmado!</AreaSubTitle>
-            <p>Prossiga para escolha de hospedagem e atividades</p>
-          </div>
-        </ConfirmPayment>
-
         {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) ||
         selectedTicket.name === 'Online' ? (
             !userSelect ? (
@@ -155,16 +146,21 @@ export default function Payment() {
               </Pricie>
             ) : null
           ) : null}
-        {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) ||
-          selectedTicket.name === 'Online' ? (
+        {ticketUser.status === 'PAID' ? (
+          <ConfirmPaymentBlock />
+        ) : (selectedTicket.name !== undefined && selectedTicket2.name !== undefined) ||
+            selectedTicket.name === 'Online' ? (
             <GenericButton onClick={userSelect ? pay : reserve}>
               {userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}
             </GenericButton>
           ) : null}
       </>
     );
-  } else {
+  } else if (!personalInformations) {
+    //caso não tenha inscrição
     return <PopUp>{NO_ENROLLMENT_MESSAGE}</PopUp>;
+  } else {
+    return 'loading...';
   }
 }
 
@@ -174,4 +170,3 @@ const Pricie = styled.h1`
   font-size: 20px;
   color: var(--font-gray);
 `;
-
