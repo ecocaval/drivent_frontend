@@ -23,7 +23,6 @@ export default function Payment() {
   const [personalInformations, setPersonalInformations] = useState([]);
 
   const token = useToken();
-  console.log(token);
   useEffect(async() => {
     try {
       const arrTicketType = await ticketTypeService(token);
