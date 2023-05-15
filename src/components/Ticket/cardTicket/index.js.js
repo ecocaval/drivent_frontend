@@ -29,6 +29,10 @@ export const CardTickets = styled.div`
   margin: 0 24px 44px 0;
 
   font-size: 1em;
+  :hover{
+    cursor: pointer;
+  }
+
   >p{
     display: inline-block;
     color: var(--font-gray);

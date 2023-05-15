@@ -20,7 +20,7 @@ export default function Payment() {
   const [ticketType, setTicketType] = useState([]);
   const [userSelect, setUserSelect] = useState(undefined);
   const [abiliter, setAbiliter] = useState(false);
-  const [personalInformations, setPersonalInformations] = useState([]);
+  const [personalInformations, setPersonalInformations] = useState({});
 
   const token = useToken();
   useEffect(async() => {
@@ -32,7 +32,6 @@ export default function Payment() {
     const personalInformations = await getPersonalInformations(token);
     setPersonalInformations(personalInformations);
   }, []);
-
   const types = () => {
     const amountOfTypes = ticketType.length;
     const possibilities = [{ id: '', name: 'Presencial', price: 0 }, {}, {}, {}];
@@ -97,7 +96,7 @@ export default function Payment() {
     setAbiliter(false);
   }
 
-  if (personalInformations.length > 0) {
+  if (personalInformations) {
     return (
       <>
         <AreaTitle>Ingresso e pagamento</AreaTitle>
@@ -116,6 +115,7 @@ export default function Payment() {
         ) : null}
         {userSelect ? <TitleSection title={'Pagamento'} /> : null}
         {userSelect && abiliter ? <FormCreditCard formData={formData} setFormData={setFormData} /> : null}
+        
         <ConfirmPayment>
           <div>
             <AiFillCheckCircle style={{ marginRight: '20px', color: 'green', width: '40px', height: '40px' }} />
