@@ -26,7 +26,8 @@ const Ticket = ({
           />
         ))}
       </CardSection>
-      <TitleSection title={'Ótimo! Agora escolha sua modalidade de hospedagem'} />
+      {selectedTicket.name !== undefined && selectedTicket.name === 'Presencial' ? 
+        <TitleSection title={'Ótimo! Agora escolha sua modalidade de hospedagem'} /> : ''}
       {selectedTicket.name !== undefined && selectedTicket.name === 'Presencial' ? (
         <CardSection>
           {type.slice(2, 4).map((e) => (
