@@ -33,7 +33,7 @@ export default function Payment() {
   }, []);
   const types = () => {
     const amountOfTypes = ticketType.length;
-    const valueOfTrueTrue = ticketType.find(e => (e.includesHotel == false && e.isRemote == false) );
+    const valueOfTrueTrue = ticketType.find((e) => e.includesHotel == false && e.isRemote == false);
     const possibilities = [{ id: '', name: 'Presencial', price: 0 }, {}, {}, {}];
     console.log(valueOfTrueTrue);
     for (let i = 0; i < amountOfTypes; i++) {
@@ -69,7 +69,7 @@ export default function Payment() {
   });
 
   function reserve() {
-    setUserSelect(selectedTicket.id);
+    setUserSelect(selectedTicket.name === 'Presencial' ? selectedTicket2.id : selectedTicket.id);
     setAbiliter(true);
   }
   async function pay() {
@@ -116,7 +116,8 @@ export default function Payment() {
         ) : abiliter ? (
           <CardTicketsx2>
             <div>
-              {selectedTicket.name} {selectedTicket.name === 'Online'? null: '+'} {selectedTicket.name === 'Online' ? null : selectedTicket2.name}
+              {selectedTicket.name} {selectedTicket.name === 'Online' ? null : '+'}{' '}
+              {selectedTicket.name === 'Online' ? null : selectedTicket2.name}
             </div>
             <p>R${selectedTicket.price}</p>
           </CardTicketsx2>
