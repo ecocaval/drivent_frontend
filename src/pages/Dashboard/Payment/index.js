@@ -9,10 +9,8 @@ import { toast } from 'react-toastify';
 import TitleSection from '../../../components/Titles/TitleSection';
 import { getPersonalInformations } from '../../../services/enrollmentApi';
 import { PopUp } from '../../../components/PopUp';
-import {
-  NO_ENROLLMENT_MESSAGE
-} from './utils/defaultMessages';
-import { ConfirmPaymentBlock } from './utils/ConfirmPaymentBlockStyle';
+import { NO_ENROLLMENT_MESSAGE } from './utils/defaultMessages';
+import { CardTicketsx2 } from '../../../components/Ticket/cardTicket/index.js';
 export default function Payment() {
   const [ticketUser, setTicketUser] = useState({});
   const [selectedTicket, setSelectedTicket] = useState({});
@@ -26,18 +24,16 @@ export default function Payment() {
     try {
       const arrTicketType = await ticketTypeService(token);
       setTicketType(arrTicketType);
-
-      //pega os tickets
-      const tickets = await getTickets(token);
-      setTicketUser(tickets);
-    } catch (error) { }
+    } catch (error) {}
 
     const personalInformations = await getPersonalInformations(token);
     setPersonalInformations(personalInformations);
   }, []);
   const types = () => {
     const amountOfTypes = ticketType.length;
+    const valueOfTrueTrue = ticketType.find((e) => e.includesHotel == false && e.isRemote == false);
     const possibilities = [{ id: '', name: 'Presencial', price: 0 }, {}, {}, {}];
+    console.log(valueOfTrueTrue);
     for (let i = 0; i < amountOfTypes; i++) {
       const possibleValues = possibilities[i + 1];
       if (ticketType[i].isRemote === false) {
@@ -51,7 +47,7 @@ export default function Payment() {
         } else {
           possibleValues['id'] = ticketType[i].id;
           possibleValues['name'] = 'Com Hotel';
-          possibleValues['price'] = 200;
+          possibleValues['price'] = ticketType[i].price - valueOfTrueTrue.price;
         }
       } else {
         possibleValues['id'] = ticketType[i].id;
@@ -71,7 +67,7 @@ export default function Payment() {
   });
 
   function reserve() {
-    setUserSelect(selectedTicket.id);
+    setUserSelect(selectedTicket.name === 'Presencial' ? selectedTicket2.id : selectedTicket.id);
     setAbiliter(true);
   }
   async function pay() {
@@ -125,40 +121,52 @@ export default function Payment() {
             setSelectedTicket={setSelectedTicket}
             setSelectedTicket2={setSelectedTicket2}
           />
+        ) : abiliter ? (
+          <CardTicketsx2>
+            <div>
+              {selectedTicket.name} {selectedTicket.name === 'Online' ? null : '+'}{' '}
+              {selectedTicket.name === 'Online' ? null : selectedTicket2.name}
+            </div>
+            <p>R${selectedTicket.price}</p>
+          </CardTicketsx2>
         ) : null}
         {abiliter ? <TitleSection title={'Pagamento'} /> : null}
         {userSelect && abiliter ? <FormCreditCard formData={formData} setFormData={setFormData} /> : null}
 
-        {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
-          !userSelect ? (
-            <Pricie>
-              Fechado! O total ficou em
-              <strong>
-                R$ {selectedTicket2.price ? selectedTicket.price + selectedTicket2.price : selectedTicket.price}
-              </strong>
-              . Agora é só confirmar
-            </Pricie>
-          ) : null
-        ) : null}
-        { ticketUser.status === 'PAID' ? <ConfirmPaymentBlock/> : (selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
-          <GenericButton onClick={userSelect ? pay : reserve}>
-            {userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}
-          </GenericButton>
-        ) : null}
+        <ConfirmPayment>
+          <div>
+            <AiFillCheckCircle style={{ marginRight: '20px', color: 'green', width: '40px', height: '40px' }} />
+          </div>
+          <div>
+            <AreaSubTitle>Pagamento confirmado!</AreaSubTitle>
+            <p>Prossiga para escolha de hospedagem e atividades</p>
+          </div>
+        </ConfirmPayment>
+
+        {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) ||
+        selectedTicket.name === 'Online' ? (
+            !userSelect ? (
+              <Pricie>
+                Fechado! O total ficou em
+                <strong>
+                  R$ {selectedTicket2.price ? selectedTicket.price + selectedTicket2.price : selectedTicket.price}
+                </strong>
+                . Agora é só confirmar
+              </Pricie>
+            ) : null
+          ) : null}
+        {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) ||
+          selectedTicket.name === 'Online' ? (
+            <GenericButton onClick={userSelect ? pay : reserve}>
+              {userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}
+            </GenericButton>
+          ) : null}
       </>
     );
-  } else if (!personalInformations) {   //caso não tenha inscrição
-    return (
-      <PopUp>
-        { NO_ENROLLMENT_MESSAGE }
-      </PopUp>
-    );
-  } else {   
-    return (
-      'loading...'
-    );
-  };
-};
+  } else {
+    return <PopUp>{NO_ENROLLMENT_MESSAGE}</PopUp>;
+  }
+}
 
 const Pricie = styled.h1`
   font-weight: 400;
