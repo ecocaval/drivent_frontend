@@ -23,6 +23,7 @@ export default function Payment() {
   const [personalInformations, setPersonalInformations] = useState([]);
 
   const token = useToken();
+  console.log(token);
   useEffect(async() => {
     try {
       const arrTicketType = await ticketTypeService(token);
@@ -72,7 +73,7 @@ export default function Payment() {
     setUserSelect(selectedTicket.id);
     setAbiliter(true);
   }
-  function pay() {
+  async function pay() {
     if (formData.issuer === 'unknown') return toast('Numero de cartão desconhecido!');
     if (
       formData.issuer === '' ||
@@ -84,19 +85,16 @@ export default function Payment() {
       return toast('Preencha todos os campos do cartão');
     if (formData.name.split(' ').length !== 2) return toast('Isira nome e sobrenome!');
     if (
-      formData.expiry.split(0, 2) < 1 ||
-      formData.expiry.split(0, 2) > 31 ||
-      formData.expiry.split(2, 4) < 1 ||
-      formData.expiry.split(2, 4) > 12
+      Number(formData.expiry.slice(0, 2)) < 1 ||
+      Number(formData.expiry.slice(0, 2)) > 31 ||
+      Number(formData.expiry.slice(2, 4)) < 1 ||
+      Number(formData.expiry.slice(2, 4)) > 12
     )
       return toast('Esta data é invalida!');
     let body = { ticketTypeId: selectedTicket.id };
-    console.log(body);
-    //const ticketUserNow = createTicket(body, token);
-
-    body = { ticketId: 1, cardData: formData };
-    console.log(body);
-    //payTicket(body, token);
+    const ticketUserNow = await createTicket(body, token);
+    body = { ticketId: ticketUserNow.id, cardData: { number: formData.number, issuer: formData.issuer } };
+    const pay = await payTicket(body, token);
     setAbiliter(false);
   }
 

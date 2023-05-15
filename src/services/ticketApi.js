@@ -19,7 +19,7 @@ export async function createTicket(body, token) {
 }
 
 export async function payTicket(body, token) {
-  const response = await api.post('/process', body, {
+  const response = await api.post('/payments/process', body, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
