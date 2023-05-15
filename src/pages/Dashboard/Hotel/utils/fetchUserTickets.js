@@ -15,6 +15,8 @@ export default async function fetchUserTickets(token, setUserTicketIncludesHotel
 
     const [ticketType] = ticketTypes.filter((ticket) => ticket.id === userTickets.ticketTypeId);
 
+    console.log(ticketType);
+
     if (!ticketType.includesHotel) {
       setUserTicketIncludesHotel(false);
     }

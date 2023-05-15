@@ -87,9 +87,9 @@ export default function Payment() {
     if (formData.name.split(' ').length !== 2) return toast('Isira nome e sobrenome!');
     if (
       Number(formData.expiry.slice(0, 2)) < 1 ||
-      Number(formData.expiry.slice(0, 2)) > 31 ||
+      Number(formData.expiry.slice(0, 2)) > 12 ||
       Number(formData.expiry.slice(2, 4)) < 1 ||
-      Number(formData.expiry.slice(2, 4)) > 12
+      Number(formData.expiry.slice(2, 4)) > 80
     )
       return toast('Esta data é invalida!');
     let body = { ticketTypeId: selectedTicket.id };
