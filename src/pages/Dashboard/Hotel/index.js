@@ -34,10 +34,11 @@ export default function Hotel() {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedHotel, setSelectedHotel] = useState(null);
 
-  useEffect(() => {
+  useEffect(async() => {
     fetchHotelsWithoutRooms(token, setHotelsWithoutRooms);
     fetchUserTickets(token, setUserTicketIncludesHotel, setUserTicketIsPaid);
-  }, []);
+    console.log(userTicketIncludesHotel);
+  }, []); 
 
   useEffect(() => {
     if (hotelsWithoutRooms.length > 0 && hotelsWithRooms.length === 0) {

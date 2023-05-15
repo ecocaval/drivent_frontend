@@ -8,7 +8,11 @@ import useToken from '../../../hooks/useToken';
 import { createTicket, payTicket, ticketTypeService } from '../../../services/ticketApi';
 import { toast } from 'react-toastify';
 import TitleSection from '../../../components/Titles/TitleSection';
-
+import { getPersonalInformations } from '../../../services/enrollmentApi';
+import { PopUp } from '../../../components/PopUp';
+import {
+  NO_ENROLLMENT_MESSAGE
+} from './utils/defaultMessages';
 export default function Payment() {
   const [ticketUser, setTicketUser] = useState({});
   const [selectedTicket, setSelectedTicket] = useState({});
@@ -16,13 +20,17 @@ export default function Payment() {
   const [ticketType, setTicketType] = useState([]);
   const [userSelect, setUserSelect] = useState(undefined);
   const [abiliter, setAbiliter] = useState(false);
+  const [personalInformations, setPersonalInformations] = useState([]);
 
   const token = useToken();
   useEffect(async() => {
     try {
       const arrTicketType = await ticketTypeService(token);
       setTicketType(arrTicketType);
-    } catch (error) {}
+    } catch (error) { }
+
+    const personalInformations = await getPersonalInformations(token);
+    setPersonalInformations(personalInformations);
   }, []);
 
   const types = () => {
@@ -91,51 +99,61 @@ export default function Payment() {
     //payTicket(body, token);
     setAbiliter(false);
   }
-  return (
-    <>
-      <AreaTitle>Ingresso e pagamento</AreaTitle>
-      {!userSelect ? (
-        <Ticket
-          types={types}
-          ticketType={ticketType}
-          setTicketType={setTicketType}
-          userSelect={userSelect}
-          setUserSelect={setUserSelect}
-          selectedTicket={selectedTicket}
-          selectedTicket2={selectedTicket2}
-          setSelectedTicket={setSelectedTicket}
-          setSelectedTicket2={setSelectedTicket2}
-        />
-      ) : null}
-      {userSelect ? <TitleSection title={'Pagamento'} /> : null}
-      {userSelect && abiliter ? <FormCreditCard formData={formData} setFormData={setFormData} /> : null}
-      <ConfirmPayment>
-        <div>
-          <AiFillCheckCircle style={{ marginRight: '20px', color: 'green', width: '40px', height: '40px' }} />
-        </div>
-        <div>
-          <AreaSubTitle>Pagamento confirmado!</AreaSubTitle>
-          <p>Prossiga para escolha de hospedagem e atividades</p>
-        </div>
-      </ConfirmPayment>
-      {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
-        !userSelect ? (
-          <Pricie>
-            Fechado! O total ficou em
-            <strong>
-              R$ {selectedTicket2.price ? selectedTicket.price + selectedTicket2.price : selectedTicket.price}
-            </strong>
-            . Agora é só confirmar
-          </Pricie>
-        ) : null
-      ) : null}
-      {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
-        <GenericButton onClick={userSelect ? pay : reserve}>
-          {userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}
-        </GenericButton>
-      ) : null}
-    </>
-  );
+
+  if (personalInformations.length > 0) {
+    return (
+      <>
+        <AreaTitle>Ingresso e pagamento</AreaTitle>
+        {!userSelect ? (
+          <Ticket
+            types={types}
+            ticketType={ticketType}
+            setTicketType={setTicketType}
+            userSelect={userSelect}
+            setUserSelect={setUserSelect}
+            selectedTicket={selectedTicket}
+            selectedTicket2={selectedTicket2}
+            setSelectedTicket={setSelectedTicket}
+            setSelectedTicket2={setSelectedTicket2}
+          />
+        ) : null}
+        {userSelect ? <TitleSection title={'Pagamento'} /> : null}
+        {userSelect && abiliter ? <FormCreditCard formData={formData} setFormData={setFormData} /> : null}
+        <ConfirmPayment>
+          <div>
+            <AiFillCheckCircle style={{ marginRight: '20px', color: 'green', width: '40px', height: '40px' }} />
+          </div>
+          <div>
+            <AreaSubTitle>Pagamento confirmado!</AreaSubTitle>
+            <p>Prossiga para escolha de hospedagem e atividades</p>
+          </div>
+        </ConfirmPayment>
+
+        {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
+          !userSelect ? (
+            <Pricie>
+              Fechado! O total ficou em
+              <strong>
+                R$ {selectedTicket2.price ? selectedTicket.price + selectedTicket2.price : selectedTicket.price}
+              </strong>
+              . Agora é só confirmar
+            </Pricie>
+          ) : null
+        ) : null}
+        {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
+          <GenericButton onClick={userSelect ? pay : reserve}>
+            {userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}
+          </GenericButton>
+        ) : null}
+      </>
+    );
+  } else {
+    return (
+      <PopUp>
+        { NO_ENROLLMENT_MESSAGE }
+      </PopUp>
+    );
+  }
 }
 
 const Pricie = styled.h1`
