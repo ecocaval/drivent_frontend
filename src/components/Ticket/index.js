@@ -16,9 +16,9 @@ const Ticket = ({
     <>
       <TitleSection title={'Primeiro, escolha sua modalidade de ingresso'} />
       <CardSection>
-        {type.slice(0, 2).map((e) => (
+        {type.slice(0, 2).map((e, index) => (
           <CardTicket
-            key={e.name}
+            key={index}
             e={e}
             selectedTicket={selectedTicket}
             setSelectedTicket={setSelectedTicket}
@@ -30,8 +30,8 @@ const Ticket = ({
         <TitleSection title={'Ótimo! Agora escolha sua modalidade de hospedagem'} /> : ''}
       {selectedTicket.name !== undefined && selectedTicket.name === 'Presencial' ? (
         <CardSection>
-          {type.slice(2, 4).map((e) => (
-            <CardTicket key={e.name} e={e} selectedTicket={selectedTicket2} setSelectedTicket={setSelectedTicket2} />
+          {type.slice(2, 4).map((e, index) => (
+            <CardTicket key={index} e={e} selectedTicket={selectedTicket2} setSelectedTicket={setSelectedTicket2} />
           ))}
         </CardSection>
       ) : null}

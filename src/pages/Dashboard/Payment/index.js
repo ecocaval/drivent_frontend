@@ -1,11 +1,10 @@
-import { AiFillCheckCircle } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 import FormCreditCard from '../../../components/FormCreditCard';
 import Ticket from '../../../components/Ticket';
 import styled from 'styled-components';
-import { AreaSubTitle, AreaTitle, GenericButton } from '../../../assets/styles/styledDashboard';
+import { AreaTitle, GenericButton } from '../../../assets/styles/styledDashboard';
 import useToken from '../../../hooks/useToken';
-import { createTicket, payTicket, ticketTypeService } from '../../../services/ticketApi';
+import { createTicket, getTickets, payTicket, ticketTypeService } from '../../../services/ticketApi';
 import { toast } from 'react-toastify';
 import TitleSection from '../../../components/Titles/TitleSection';
 import { getPersonalInformations } from '../../../services/enrollmentApi';
@@ -13,6 +12,7 @@ import { PopUp } from '../../../components/PopUp';
 import {
   NO_ENROLLMENT_MESSAGE
 } from './utils/defaultMessages';
+import { ConfirmPaymentBlock } from './utils/ConfirmPaymentBlockStyle';
 export default function Payment() {
   const [ticketUser, setTicketUser] = useState({});
   const [selectedTicket, setSelectedTicket] = useState({});
@@ -21,12 +21,15 @@ export default function Payment() {
   const [userSelect, setUserSelect] = useState(undefined);
   const [abiliter, setAbiliter] = useState(false);
   const [personalInformations, setPersonalInformations] = useState({});
-
   const token = useToken();
   useEffect(async() => {
     try {
       const arrTicketType = await ticketTypeService(token);
       setTicketType(arrTicketType);
+
+      //pega os tickets
+      const tickets = await getTickets(token);
+      setTicketUser(tickets);
     } catch (error) { }
 
     const personalInformations = await getPersonalInformations(token);
@@ -94,8 +97,18 @@ export default function Payment() {
     body = { ticketId: ticketUserNow.id, cardData: { number: formData.number, issuer: formData.issuer } };
     const pay = await payTicket(body, token);
     setAbiliter(false);
+    const tickets = await getTickets(token);
+    setTicketUser(tickets);
   }
 
+  //confirmação de pagamento
+  if (ticketUser.status && ticketUser.status === 'PAID') {
+    return (
+      <ConfirmPaymentBlock/>
+    );
+  };
+
+  //caso tenha inscrição, mas não possui pagamento
   if (personalInformations) {
     return (
       <>
@@ -113,18 +126,8 @@ export default function Payment() {
             setSelectedTicket2={setSelectedTicket2}
           />
         ) : null}
-        {userSelect ? <TitleSection title={'Pagamento'} /> : null}
+        {abiliter ? <TitleSection title={'Pagamento'} /> : null}
         {userSelect && abiliter ? <FormCreditCard formData={formData} setFormData={setFormData} /> : null}
-        
-        <ConfirmPayment>
-          <div>
-            <AiFillCheckCircle style={{ marginRight: '20px', color: 'green', width: '40px', height: '40px' }} />
-          </div>
-          <div>
-            <AreaSubTitle>Pagamento confirmado!</AreaSubTitle>
-            <p>Prossiga para escolha de hospedagem e atividades</p>
-          </div>
-        </ConfirmPayment>
 
         {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
           !userSelect ? (
@@ -137,21 +140,25 @@ export default function Payment() {
             </Pricie>
           ) : null
         ) : null}
-        {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
+        { ticketUser.status === 'PAID' ? <ConfirmPaymentBlock/> : (selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
           <GenericButton onClick={userSelect ? pay : reserve}>
             {userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}
           </GenericButton>
         ) : null}
       </>
     );
-  } else {
+  } else if (!personalInformations) {   //caso não tenha inscrição
     return (
       <PopUp>
         { NO_ENROLLMENT_MESSAGE }
       </PopUp>
     );
-  }
-}
+  } else {   
+    return (
+      'loading...'
+    );
+  };
+};
 
 const Pricie = styled.h1`
   font-weight: 400;
@@ -160,14 +167,3 @@ const Pricie = styled.h1`
   color: var(--font-gray);
 `;
 
-const ConfirmPayment = styled.div`
-  display: flex;
-  div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  p {
-  }
-  margin-bottom: 17px;
-`;
