@@ -11,6 +11,7 @@ import { getPersonalInformations } from '../../../services/enrollmentApi';
 import { PopUp } from '../../../components/PopUp';
 import { ConfirmPaymentBlock } from './utils/ConfirmPaymentBlockStyle';
 import { NO_ENROLLMENT_MESSAGE } from './utils/defaultMessages';
+import { CardTicketsx2 } from '../../../components/Ticket/cardTicket/index.js';
 export default function Payment() {
   const [ticketUser, setTicketUser] = useState({});
   const [selectedTicket, setSelectedTicket] = useState({});
@@ -19,16 +20,16 @@ export default function Payment() {
   const [userSelect, setUserSelect] = useState(undefined);
   const [abiliter, setAbiliter] = useState(false);
   const [personalInformations, setPersonalInformations] = useState({});
+  const [focis, setFocis] = useState(false);
   const token = useToken();
+  console.log(userSelect);
   useEffect(async() => {
     try {
       const arrTicketType = await ticketTypeService(token);
       setTicketType(arrTicketType);
 
-      //pega os tickets
       const tickets = await getTickets(token);
-      console.log(tickets);
-      if (tickets) setTicketUser(tickets);
+      setTicketUser({ ...arrTicketType.find(e => e.id === tickets.ticketTypeId), status: tickets.status }); 
     } catch (error) {}
 
     const personalInformations = await getPersonalInformations(token);
@@ -71,7 +72,7 @@ export default function Payment() {
   });
 
   function reserve() {
-    setUserSelect(selectedTicket.name === 'Presencial' ? selectedTicket2.id : selectedTicket.id);
+    setUserSelect(selectedTicket.name === 'Presencial' ? selectedTicket2 : selectedTicket);
     setAbiliter(true);
   }
   async function pay() {
@@ -92,14 +93,13 @@ export default function Payment() {
       Number(formData.expiry.slice(2, 4)) > 80
     )
       return toast('Esta data é invalida!');
-    let body = { ticketTypeId: selectedTicket.id };
+    let body = { ticketTypeId: userSelect.id };
     const ticketUserNow = await createTicket(body, token);
     body = { ticketId: ticketUserNow.id, cardData: { number: formData.number, issuer: formData.issuer } };
     const pay = await payTicket(body, token);
     setAbiliter(false);
-    const tickets = await getTickets(token);
-    setTicketUser(tickets);
-  }
+    setFocis(!focis);
+  }   
 
   //confirmação de pagamento
   if (ticketUser.status && ticketUser.status === 'PAID' && selectedTicket && selectedTicket2) {
@@ -114,7 +114,7 @@ export default function Payment() {
   if (personalInformations) {
     return (
       <>
-        {!abiliter ? (
+        {!abiliter && !userSelect ? (
           <>
             <AreaTitle>Ingresso e pagamento</AreaTitle>
 
@@ -133,7 +133,18 @@ export default function Payment() {
         ) : null}
 
         {abiliter ? <TitleSection title={'Pagamento'} /> : null}
-        {userSelect && abiliter ? <FormCreditCard formData={formData} setFormData={setFormData} /> : null}
+        {userSelect && abiliter ? (
+          <>
+            <CardTicketsx2>
+              <div>
+                {selectedTicket.name} {selectedTicket.name === 'Online' ? null : '+'}{' '}
+                {selectedTicket.name === 'Online' ? null : selectedTicket2.name}
+              </div>
+              <p>R${selectedTicket2.name === 'Com Hotel'?selectedTicket2.price+selectedTicket.price:selectedTicket.name==='Online'? selectedTicket.price : selectedTicket.price }</p>
+            </CardTicketsx2>
+            <FormCreditCard formData={formData} setFormData={setFormData} />
+          </>
+        ) : null}
         {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) ||
         selectedTicket.name === 'Online' ? (
             !userSelect ? (
@@ -147,13 +158,12 @@ export default function Payment() {
             ) : null
           ) : null}
         {ticketUser.status === 'PAID' ? (
-          <ConfirmPaymentBlock />
-        ) : (selectedTicket.name !== undefined && selectedTicket2.name !== undefined) ||
-            selectedTicket.name === 'Online' ? (
-            <GenericButton onClick={userSelect ? pay : reserve}>
-              {userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}
-            </GenericButton>
-          ) : null}
+          <ConfirmPaymentBlock userSelect={userSelect} />
+        ) : (!focis ? (
+          <GenericButton onClick={userSelect ? pay : reserve}>
+            {userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}
+          </GenericButton>
+        ) : null)}
       </>
     );
   } else if (!personalInformations) {
