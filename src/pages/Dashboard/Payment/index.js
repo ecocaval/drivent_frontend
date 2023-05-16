@@ -26,7 +26,6 @@ export default function Payment() {
     try {
       const arrTicketType = await ticketTypeService(token);
       setTicketType(arrTicketType);
-
       const tickets = await getTickets(token);
       console.log(tickets);
     } catch (error) {}
