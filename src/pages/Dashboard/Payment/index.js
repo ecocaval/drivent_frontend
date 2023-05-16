@@ -22,14 +22,13 @@ export default function Payment() {
   const [personalInformations, setPersonalInformations] = useState({});
   const [focis, setFocis] = useState(false);
   const token = useToken();
-  console.log(userSelect);
   useEffect(async() => {
     try {
       const arrTicketType = await ticketTypeService(token);
       setTicketType(arrTicketType);
 
       const tickets = await getTickets(token);
-      setTicketUser({ ...arrTicketType.find(e => e.id === tickets.ticketTypeId), status: tickets.status }); 
+      console.log(tickets);
     } catch (error) {}
 
     const personalInformations = await getPersonalInformations(token);
@@ -110,7 +109,6 @@ export default function Payment() {
     );
   }
 
-  //caso tenha inscrição, mas não possui pagamento
   if (personalInformations) {
     return (
       <>
@@ -158,7 +156,7 @@ export default function Payment() {
             ) : null
           ) : null}
         {ticketUser.status === 'PAID' ? (
-          <ConfirmPaymentBlock userSelect={userSelect} />
+          <ConfirmPaymentBlock />
         ) : (!focis ? (
           <GenericButton onClick={userSelect ? pay : reserve}>
             {userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}

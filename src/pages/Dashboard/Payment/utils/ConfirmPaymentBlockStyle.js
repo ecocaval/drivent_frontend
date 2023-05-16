@@ -5,16 +5,15 @@ import { AreaTitle } from '../../../../assets/styles/styledDashboard';
 import TitleSection from '../../../../components/Titles/TitleSection';
 import { CardTicketsx2 } from '../../../../components/Ticket/cardTicket/index.js';
 
-export function ConfirmPaymentBlock({ userSelect }) {
-  console.log(userSelect);
+export async function ConfirmPaymentBlock() {
   return (
     <ConfirmPaymentBlockStyle>
       <AreaTitle>Ingresso e pagamento</AreaTitle>
       <CardTicketsx2>
         <div>
-          {userSelect.name}
+          {}
         </div>
-        <p>R${ userSelect.price }</p>
+        <p>R${}</p>
       </CardTicketsx2>
       <TitleSection title={'Pagamento'} />
       <ConfirmPayment>
