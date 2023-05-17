@@ -1,40 +1,34 @@
 import styled from 'styled-components';
 import TitleSection from '../Titles/TitleSection';
 import { CardTicket } from './cardTicket/index.js';
+import types from '../../pages/Dashboard/Payment/utils/separationsOfTypes';
 
-const Ticket = ({
-  ticketType,
-  setUserSelect,
-  selectedTicket,
-  selectedTicket2,
-  setSelectedTicket,
-  setSelectedTicket2,
-  types,
-}) => {
-  const type = types();
+const Ticket = ({ ticketType, firstSelection, setFirstSelection, lastSelection, setLastSelection }) => {
+  const type = types(ticketType);
   return (
     <>
       <TitleSection title={'Primeiro, escolha sua modalidade de ingresso'} />
       <CardSection>
         {type.slice(0, 2).map((e, index) => (
           <CardTicket
-            key={index}
+            key={e.name}
             e={e}
-            selectedTicket={selectedTicket}
-            setSelectedTicket={setSelectedTicket}
-            setSelectedTicket2={setSelectedTicket2}
+            firstSelection={firstSelection}
+            setFirstSelection={setFirstSelection}
+            setLastSelection={setLastSelection}
           />
         ))}
       </CardSection>
-      {selectedTicket.name !== undefined && selectedTicket.name === 'Presencial' ? 
-        <TitleSection title={'Ótimo! Agora escolha sua modalidade de hospedagem'} /> : ''}
-      {selectedTicket.name !== undefined && selectedTicket.name === 'Presencial' ? (
-        <CardSection>
-          {type.slice(2, 4).map((e, index) => (
-            <CardTicket key={index} e={e} selectedTicket={selectedTicket2} setSelectedTicket={setSelectedTicket2} />
-          ))}
-        </CardSection>
-      ) : null}
+      { firstSelection.name === 'Presencial' &&
+        <>
+          <TitleSection title={'Ótimo! Agora escolha sua modalidade de hospedagem'} />
+          <CardSection>
+            {type.slice(2, 4).map((e, index) => (
+              <CardTicket key={e.name} e={e} firstSelection={lastSelection} setFirstSelection={setLastSelection} />
+            ))}
+          </CardSection>
+        </>
+      }
     </>
   );
 };

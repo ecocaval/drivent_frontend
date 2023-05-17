@@ -43,9 +43,6 @@ export default function Hotel() {
       fetchHotelsWithRooms(token, hotelsWithoutRooms, setHotelsWithRooms);
     }
   }, [hotelsWithoutRooms]);
-  console.log('userTicketIncludesHotel', userTicketIncludesHotel);
-  console.log('userTicketIsPaid', userTicketIsPaid);
-  console.log('hotelsWithoutRooms', hotelsWithoutRooms);
 
   return (
     <>
