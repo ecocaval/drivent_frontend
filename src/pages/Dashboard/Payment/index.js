@@ -1,57 +1,25 @@
-import { AiFillCheckCircle } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 import FormCreditCard from '../../../components/FormCreditCard';
 import Ticket from '../../../components/Ticket';
 import styled from 'styled-components';
-import { AreaSubTitle, AreaTitle, GenericButton } from '../../../assets/styles/styledDashboard';
+import { AreaTitle, GenericButton } from '../../../assets/styles/styledDashboard';
 import useToken from '../../../hooks/useToken';
-import { createTicket, payTicket, ticketTypeService } from '../../../services/ticketApi';
+import { createTicket, getTickets, payTicket, ticketTypeService } from '../../../services/ticketApi';
 import { toast } from 'react-toastify';
 import TitleSection from '../../../components/Titles/TitleSection';
-
+import { getPersonalInformations } from '../../../services/enrollmentApi';
+import { PopUp } from '../../../components/PopUp';
+import { ConfirmPaymentBlock } from './utils/ConfirmPaymentBlockStyle';
+import { NO_ENROLLMENT_MESSAGE } from './utils/defaultMessages';
+import { CardTicketsx2 } from '../../../components/Ticket/cardTicket/index.js';
+import validationsInputs from '../../../components/FormCreditCard/utils/validationsInputs';
 export default function Payment() {
-  const [ticketUser, setTicketUser] = useState({});
-  const [selectedTicket, setSelectedTicket] = useState({});
-  const [selectedTicket2, setSelectedTicket2] = useState({});
-  const [ticketType, setTicketType] = useState([]);
-  const [userSelect, setUserSelect] = useState(undefined);
-  const [abiliter, setAbiliter] = useState(false);
-
-  const token = useToken();
-  useEffect(async() => {
-    try {
-      const arrTicketType = await ticketTypeService(token);
-      setTicketType(arrTicketType);
-    } catch (error) {}
-  }, []);
-
-  const types = () => {
-    const amountOfTypes = ticketType.length;
-    const possibilities = [{ id: '', name: 'Presencial', price: 0 }, {}, {}, {}];
-    for (let i = 0; i < amountOfTypes; i++) {
-      const possibleValues = possibilities[i + 1];
-      if (ticketType[i].isRemote === false) {
-        if (ticketType[i].includesHotel === false) {
-          possibleValues['id'] = ticketType[i].id;
-          possibleValues['name'] = 'Sem Hotel';
-          possibleValues['price'] = 0;
-          possibilities[0].id = ticketType[i].id;
-          possibilities[0].name = 'Presencial';
-          possibilities[0].price = ticketType[i].price;
-        } else {
-          possibleValues['id'] = ticketType[i].id;
-          possibleValues['name'] = 'Com Hotel';
-          possibleValues['price'] = 200;
-        }
-      } else {
-        possibleValues['id'] = ticketType[i].id;
-        possibleValues['name'] = 'Online';
-        possibleValues['price'] = ticketType[i].price;
-      }
-    }
-    return possibilities;
-  };
-
+  const [userHaveATicket, setUserHaveATicket] = useState();
+  const [personalInformations, setPersonalInformations] = useState();
+  const [ticketType, setTicketType] = useState();
+  const [firstSelection, setFirstSelection] = useState({});
+  const [lastSelection, setLastSelection] = useState({});
+  const [userSelect, setUserSelect] = useState();
   const [formData, setFormData] = useState({
     cvc: '',
     expiry: '',
@@ -59,83 +27,104 @@ export default function Payment() {
     number: '',
     issuer: '',
   });
+  const [payment, setPayment] = useState(true);
+  const token = useToken();
+  useEffect(async() => {
+    try {
+      const personalInformations = await getPersonalInformations(token);
+      setPersonalInformations(personalInformations);
+      const arrTicketType = await ticketTypeService(token);
+      setTicketType(arrTicketType);
+      const ticketUser = await getTickets(token);
+      setUserHaveATicket(ticketUser);
+    } catch (error) {
+      return <PopUp>Nada disponível no momento</PopUp>;
+    }
+  }, [payment]);
+
+  if (!ticketType) return <PopUp>Loading...</PopUp>;
 
   function reserve() {
-    setUserSelect(selectedTicket.id);
-    setAbiliter(true);
+    setUserSelect(firstSelection.name !== 'Online' ? lastSelection : firstSelection);
   }
-  function pay() {
-    if (formData.issuer === 'unknown') return toast('Numero de cartão desconhecido!');
-    if (
-      formData.issuer === '' ||
-      formData.cvc === '' ||
-      formData.expiry === '' ||
-      formData.name === '' ||
-      formData.number === ''
-    )
-      return toast('Preencha todos os campos do cartão');
-    if (formData.name.split(' ').length !== 2) return toast('Isira nome e sobrenome!');
-    if (
-      formData.expiry.split(0, 2) < 1 ||
-      formData.expiry.split(0, 2) > 31 ||
-      formData.expiry.split(2, 4) < 1 ||
-      formData.expiry.split(2, 4) > 12
-    )
-      return toast('Esta data é invalida!');
-    let body = { ticketTypeId: selectedTicket.id };
-    console.log(body);
-    //const ticketUserNow = createTicket(body, token);
+  async function pay() {
+    try {
+      validationsInputs(formData);
+    } catch (error) {
+      return toast(error.message);
+    }
+    let body = { ticketTypeId: userSelect.id };
+    const ticketUserNow = await createTicket(body, token);
+    body = { ticketId: ticketUserNow.id, cardData: { number: formData.number, issuer: formData.issuer } };
+    await payTicket(body, token);
+    setPayment(!payment);
+  }
 
-    body = { ticketId: 1, cardData: formData };
-    console.log(body);
-    //payTicket(body, token);
-    setAbiliter(false);
+  //confirmação de pagamento
+  if (userHaveATicket) {
+    console.log(ticketType.find((e) => e.id === userHaveATicket.ticketTypeId));
+    const ticketT = ticketType.find((e) => e.id === userHaveATicket.ticketTypeId);
+    return (
+      <>
+        <ConfirmPaymentBlock ticketT={ticketT} />
+      </>
+    );
   }
-  return (
-    <>
-      <AreaTitle>Ingresso e pagamento</AreaTitle>
-      {!userSelect ? (
-        <Ticket
-          types={types}
-          ticketType={ticketType}
-          setTicketType={setTicketType}
-          userSelect={userSelect}
-          setUserSelect={setUserSelect}
-          selectedTicket={selectedTicket}
-          selectedTicket2={selectedTicket2}
-          setSelectedTicket={setSelectedTicket}
-          setSelectedTicket2={setSelectedTicket2}
-        />
-      ) : null}
-      {userSelect ? <TitleSection title={'Pagamento'} /> : null}
-      {userSelect && abiliter ? <FormCreditCard formData={formData} setFormData={setFormData} /> : null}
-      <ConfirmPayment>
-        <div>
-          <AiFillCheckCircle style={{ marginRight: '20px', color: 'green', width: '40px', height: '40px' }} />
-        </div>
-        <div>
-          <AreaSubTitle>Pagamento confirmado!</AreaSubTitle>
-          <p>Prossiga para escolha de hospedagem e atividades</p>
-        </div>
-      </ConfirmPayment>
-      {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
-        !userSelect ? (
-          <Pricie>
-            Fechado! O total ficou em
-            <strong>
-              R$ {selectedTicket2.price ? selectedTicket.price + selectedTicket2.price : selectedTicket.price}
-            </strong>
-            . Agora é só confirmar
-          </Pricie>
-        ) : null
-      ) : null}
-      {(selectedTicket.name !== undefined && selectedTicket2.name !== undefined) || selectedTicket.name === 'Online' ? (
-        <GenericButton onClick={userSelect ? pay : reserve}>
-          {userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}
-        </GenericButton>
-      ) : null}
-    </>
-  );
+
+  if (personalInformations) {
+    return (
+      <>
+        <AreaTitle>Ingresso e pagamento</AreaTitle>
+        {!userSelect && (
+          <Ticket
+            ticketType={ticketType}
+            firstSelection={firstSelection}
+            setFirstSelection={setFirstSelection}
+            lastSelection={lastSelection}
+            setLastSelection={setLastSelection}
+          />
+        )}
+        {userSelect && (
+          <>
+            <TitleSection title={'Pagamento'} />
+            <>
+              <CardTicketsx2>
+                <div>
+                  {firstSelection.name === 'Online'
+                    ? firstSelection.name
+                    : `${firstSelection.name} + ${lastSelection.name}`}
+                </div>
+                <p>
+                  R${' '}
+                  {firstSelection.name === 'Online' ? firstSelection.price : firstSelection.price + lastSelection.price}
+                </p>
+              </CardTicketsx2>
+              <FormCreditCard formData={formData} setFormData={setFormData} />
+            </>
+          </>
+        )}
+        {(firstSelection.name === 'Online' || (firstSelection.name === 'Presencial' && lastSelection.name)) && (
+          <>
+            <Pricie>
+              Fechado! O total ficou em
+              <strong>
+                R${' '}
+                {firstSelection.name === 'Online' ? firstSelection.price : lastSelection.price + firstSelection.price}
+              </strong>
+              . Agora é só confirmar
+            </Pricie>
+            <GenericButton onClick={userSelect ? pay : reserve}>
+              {userSelect ? 'FINALIZAR PAGAMENTO' : 'RESERVAR INGRESSO'}
+            </GenericButton>
+          </>
+        )}
+      </>
+    );
+  } else if (!personalInformations) {
+    return <PopUp>{NO_ENROLLMENT_MESSAGE}</PopUp>;
+  } else {
+    return 'loading...';
+  }
 }
 
 const Pricie = styled.h1`
@@ -143,16 +132,4 @@ const Pricie = styled.h1`
   padding-bottom: 17px;
   font-size: 20px;
   color: var(--font-gray);
-`;
-
-const ConfirmPayment = styled.div`
-  display: flex;
-  div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  p {
-  }
-  margin-bottom: 17px;
 `;

@@ -37,8 +37,7 @@ export default function Hotel() {
   useEffect(() => {
     fetchHotelsWithoutRooms(token, setHotelsWithoutRooms);
     fetchUserTickets(token, setUserTicketIncludesHotel, setUserTicketIsPaid);
-  }, []);
-
+  }, []); 
   useEffect(() => {
     if (hotelsWithoutRooms.length > 0 && hotelsWithRooms.length === 0) {
       fetchHotelsWithRooms(token, hotelsWithoutRooms, setHotelsWithRooms);
