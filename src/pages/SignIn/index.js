@@ -38,7 +38,6 @@ export default function SignIn() {
   }, []);
 
   async function gitHubLogin(code) {
-    console.log(code);
     try {
       const userData = await getGitHubData(code);
       completeLogin(userData);

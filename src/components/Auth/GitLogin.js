@@ -16,7 +16,6 @@ export default function GitLogin() {
     const queryString = QueryString.stringify(params);
 
     window.location.href = `${GITHUB_URL}?${queryString}`;
-    console.log(queryString);
   }
 
   return (
