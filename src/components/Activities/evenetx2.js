@@ -1,28 +1,61 @@
 import styled from 'styled-components';
 import { CgEnter } from 'react-icons/cg';
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
+import { userSelectActivity } from '../../services/activitiesApi';
+import { toast } from 'react-toastify';
+import useToken from '../../hooks/useToken';
 
-const Eventx2 = () => {
+const Eventx2 = ({ element, selections, setEvent }) => {
+  const prove = selections.find((e) => e.activityId === element.id);
+  const token = useToken();
   return (
     <>
       <EventSession>
         <Description>
-          <Title>{}</Title>
-          <SubTitle>{}</SubTitle>
+          <Title>{element.name}</Title>
+          <SubTitle>xx:xx</SubTitle>
         </Description>
         <Status>
-          <>
-            <Enter />
-            <p>{} vagas</p>
-          </>
-          <>
-            <Check />
-            <p>inscrito</p>
-          </>
-          <>
-            <Close />
-            <p>esgotado</p>
-          </>
+          {prove ? (
+            prove.activityId === element.id ? (
+              <>
+                <Check />
+                <p>inscrito</p>
+              </>
+            ) : element.slots > 0 ? (
+              <>
+                <Enter
+                  onClick={() => {
+                    userSelectActivity(token, element.id);
+                    setEvent(0);
+                    toast('Inscrito');
+                  }}
+                />
+                <p>{element.slots} vagas</p>
+              </>
+            ) : (
+              <>
+                <Close />
+                <p>esgotado</p>
+              </>
+            )
+          ) : element.slots > 0 ? (
+            <>
+              <Enter
+                onClick={() => {
+                  userSelectActivity(token, element.id);
+                  setEvent(0);
+                  toast('Inscrito');
+                }}
+              />
+              <p>{element.slots} vagas</p>
+            </>
+          ) : (
+            <>
+              <Close />
+              <p>esgotado</p>
+            </>
+          )}
         </Status>
       </EventSession>
     </>
