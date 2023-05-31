@@ -9,6 +9,7 @@ body {
   font-family: 'Lexend Deca', sans-serif;
 
   /* colors */
+  --button-eventDay: #FFD37D;
   --card-event-gray: #F1F1F1;
   --border-card-gray: #d7d7d7;
   --card-default-grayx2: #FFEED2;
